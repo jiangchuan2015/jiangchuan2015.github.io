@@ -1,18 +1,139 @@
----
-layout: default
----
 
-<div class="posts">
-  {% for post in site.posts %}
-    <article class="post">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三生有幸</title>
+    <style>
+        p {
+            color: red;
+            font-weight: bold;
+            font-size: 14px;
+        }
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+        span {
+            font-size: 12px;
+            padding: 5px;
+            display: block;
+        }
 
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
+        button {
+            margin: 10px 29px 10px 0px;
+            height: 30px;
+            width: 90px;
+        }
 
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
-  {% endfor %}
-</div>
+    </style>
+
+    <script type="text/javascript">
+        let students = [
+            ['2', '陈杰诺', '13438495195', '陈杰诺妈妈', '成华区万科路4号', true],
+            ['6', '程子骁', '13679086751', '陈杰诺妈妈', '龙泉大面街道洪河北路571号恋日家园H区', true],
+            ['9', '范竞文', '13908180827', '陈杰诺妈妈', '龙泉上东阳光二期', true],
+            ['16', '贾思琪', '18080121133', '陈杰诺妈妈', '龙泉建材路金税苑12-6号', true],
+            ['26', '刘烜麟', '13808221527', '陈杰诺妈妈', '成华和美东路8号8栋', true],
+            ['1', '岑康城', '18608343302', '陈圣朴妈妈', '锦江区牛沙路166号镏金岁月', true],
+            ['3', '陈圣朴', '18980797878', '陈圣朴妈妈', '龙泉洪河大道中路600号东原晴天见', true],
+            ['30', '王浩南', '18200331680', '陈圣朴妈妈', '成华和美东路128号锦绣城二期', true],
+            ['37', '杨瀚喆', '13541035947', '陈圣朴妈妈', '眉山彭山区恒大金碧天下四期', true],
+            ['40', '喻思航', '15208141949', '陈圣朴妈妈', '成华金马河路8号', true],
+            ['41', '张瀚予', '17701383229', '陈圣朴妈妈', '', true],
+            ['8', '杜泽勋', '13648065638', '苟虹锦妈妈', '锦江三圣乡锦江大道923号', true],
+            ['11', '苟虹锦', '13438160688', '苟虹锦妈妈', '成华万科路4号', true],
+            ['14', '胡梓桐', '18980877525', '苟虹锦妈妈', '成华和美东路222号', true],
+            ['25', '刘然东', '18109089968', '苟虹锦妈妈', '龙泉大面天鹅湖西路33号世茂城二期12栋', true],
+            ['31', '王欣悦', '18328555996', '苟虹锦妈妈', '龙泉大面街金桉路百悦城', true],
+            ['35', '谢宛琳', '18628171089', '苟虹锦妈妈', '龙泉梧桐路9号上东阳光二期1栋', true],
+            ['10', '耿文博', '18280405166', '姜人文爸爸', '锦江百日红中路506号锦蓉佳苑', true],
+            ['12', '胡佳杰', '18202820165', '姜人文爸爸', '龙泉大面镇银河大道118号恒大绿洲', true],
+            ['13', '胡庆凯', '15390041381', '姜人文爸爸', '天府新区麓山大道一段310号蓝山美树', true],
+            ['17', '姜人文', '19983217858', '姜人文爸爸', '龙泉大面东洪路333号', true],
+            ['32', '王子吟', '15528928787', '姜人文爸爸', '龙泉车城西路新希望锦麟府', true],
+            ['38', '杨语洲', '18161209811', '姜人文爸爸', '龙泉梧桐路9号上东阳光二期', true],
+            ['15', '黄诗语', '15102866626', '李品学爸爸', '青白江华金大道一段261号', true],
+            ['18', '兰其霖', '13880675618', '李品学爸爸', '成华华润二十四城二期', true],
+            ['20', '李恩乐', '13908022359', '李品学爸爸', '龙泉洪河大道上东阳光三期', true],
+            ['21', '李品学', '13684082089', '李品学爸爸', '锦江百日红中路506号锦蓉佳苑1栋1单元', true],
+            ['22', '李威正', '13730655396', '李品学爸爸', '锦江华润路翡翠城五期', true],
+            // ['23', '李志翔', '15198268257', '李品学爸爸', '锦江白桦林路29号', true],
+            ['5', '陈子戈', '13982051719', '廖姝颖妈妈', '龙泉十陵上街39号', true],
+            ['7', '董骁睿', '15390061610', '廖姝颖妈妈', '龙泉大面街道洪玉路245号常青藤', true],
+            ['24', '廖姝颖', '13348899425', '廖姝颖妈妈', '龙泉大面洪玉路245号常青藤C区', true],
+            ['28', '潘祐衡', '13880925152', '廖姝颖妈妈', '龙泉梧桐路103号上东阳光四期', true],
+            ['42', '张森轶', '13880322708', '廖姝颖妈妈', '锦江成龙大道一段九号卓锦城2期41栋', true],
+            // ['4', '陈雨欣', '18615700313', '潘彦霖妈妈', '龙泉梧桐路60号上东阳光三期', true],
+            // ['19', '黎聪萱', '13808057412', '潘彦霖妈妈', '龙泉洪河大道中路600号东原晴天见', true],
+            ['27', '潘彦霖', '13008161180', '潘彦霖妈妈', '龙泉梧桐路60号上东阳光三期', true],
+            ['33', '肖俊希', '13982057850', '潘彦霖妈妈', '龙泉洪河大道洪玉路245号', true],
+            ['39', '杨紫轩', '13198569526', '潘彦霖妈妈', '龙泉皇冠国际一栋二单元3号', true],
+            ['29', '屈靖杰', '13608084515', '周相儒妈妈', '龙泉洪河大道上东阳光一期', true],
+            ['34', '谢坤洋', '13881833508', '周相儒妈妈', '龙泉驿区梧桐路上东阳光二期', true],
+            ['36', '谢知衡', '13348850941', '周相儒妈妈', '龙泉驿区上东阳光二期', true],
+            ['43', '钟羽轩', '13880671684', '周相儒妈妈', '锦江月季街167号华韵天府2栋', true],
+            ['44', '周相儒', '13658071187', '周相儒妈妈', '龙泉上东阳光二期7栋', true],
+            ['45', '周子涵', '13340982763', '周相儒妈妈', '龙泉大面梧桐路60号上东阳光三期', true]
+        ];
+
+        function update() {
+            let target = document.getElementById("target").value;
+            if (typeof target == "undefined" || target == null || target == "") {
+                return;
+            }
+
+            for (let idx in students) {
+                let student = students[idx];
+                if (target.indexOf(student[1]) < 0) {
+                    student[5] = false;
+                }
+            }
+            document.getElementById("result").innerHTML = "更新成功!";
+        }
+
+        function compare() {
+            let target = document.getElementById("target").value;
+            if (typeof target == "undefined" || target == null || target == "") {
+                return;
+            }
+
+            let result = "";
+            let index = 1;
+            for (let idx in students) {
+                let student = students[idx];
+                if (student[5] && target.indexOf(student[1]) < 0) {
+                    result += "<span>" + (index++) + ". " + student[1] + " : " + student[2] + " => " + student[3] + "</span>"
+                }
+            }
+            document.getElementById("result").innerHTML = result;
+        }
+
+        function search() {
+            let target = document.getElementById("target").value;
+            if (typeof target == "undefined" || target == null || target == "") {
+                return;
+            }
+
+            let result = "";
+            let index = 1;
+            for (let idx in students) {
+                let student = students[idx].toString();
+                if (student.indexOf(target) >= 0) {
+                    result += "<span>" + (index++) + ". " + student.replaceAll(",", ",  ") + "</span>"
+                }
+            }
+            document.getElementById("result").innerHTML = result;
+        }
+    </script>
+</head>
+<body>
+<p>输入:</p>
+<textarea style="font-size: 12px; padding: 10px" id="target" rows="10" cols="50"></textarea>
+<br/>
+<button type="button" onclick="update()">设置</button>
+<button type="button" onclick="compare()">对比</button>
+<button type="button" onclick="search()">查询</button>
+
+<p>结果:</p>
+<div id="result"/>
+
+</body>
+</html>
