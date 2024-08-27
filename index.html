@@ -111,12 +111,12 @@
             }
 
             let count = 0;
-            let result = "<span>学号 \t 姓名 \t 电话 \t 地址</span>";
+            let result = "<span>学号 \t 姓名 \t 电话 \t 互助联络人 \t 地址</span>";
             students.sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
             for (let student of students) {
                 if (student.toString().indexOf(target) >= 0) {
                     count++;
-                    result += `<span>${student[0]} \t ${student[1]} \t ${student[2]} \t ${student[4]}</span>`
+                    result += `<span>${student[0]} \t ${student[1]} \t ${student[2]} \t ${student[3]} \t ${student[4]}</span>`
                 }
             }
             if (count > 0) {
