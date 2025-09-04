@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生位置地图</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .map-container {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <div id="map"></div>
+        <div class="loading" id="loading">地图加载中...</div>
+    </div>
+
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=lvEYmjV9oZA62d3Vskd78Lc75MJ82WM2"></script>
+    <script>
+        // 学生坐标数据
+        const students = [
+            {name: '白书凡', lng: 104.264964, lat: 30.541504},
+            {name: '曹坤', lng: 104.187397, lat: 30.571438},
+            {name: '曾芮', lng: 104.238488, lat: 30.583409},
+            {name: '陈浩天', lng: 104.203108, lat: 30.585051},
+            {name: '陈誉锋', lng: 104.271443, lat: 30.660379},
+            {name: '陈兆奕', lng: 104.196609, lat: 30.581694},
+            {name: '单闫', lng: 104.272984, lat: 30.561101},
+            {name: '邓鑫', lng: 104.281397, lat: 30.562698},
+            {name: '冯梓媛', lng: 104.232226, lat: 30.655660},
+            {name: '何沛东', lng: 104.185494, lat: 30.571505},
+            {name: '胡欣怡', lng: 104.234546, lat: 30.651324},
+            {name: '黄伟诚', lng: 104.277980, lat: 30.553960},
+            {name: '黄心语', lng: 104.268385, lat: 30.546194},
+            {name: '贾美莎', lng: 104.266714, lat: 30.558110},
+            {name: '姜人文', lng: 104.156220, lat: 30.624105},
+            {name: '黎思彤', lng: 104.215327, lat: 30.576070},
+            {name: '李好好', lng: 104.244885, lat: 30.662564},
+            {name: '梁家钰', lng: 104.301178, lat: 30.586486},
+            {name: '刘馨雨', lng: 104.178291, lat: 30.669064},
+            {name: '刘雨桐', lng: 104.238394, lat: 30.658757},
+            {name: '龙奕瑾', lng: 104.274577, lat: 30.560510},
+            {name: '卢怡', lng: 104.237005, lat: 30.579267},
+            {name: '毛新瑞', lng: 104.244885, lat: 30.662564},
+            {name: '聂铭轩', lng: 104.265901, lat: 30.552467},
+            {name: '欧雨嘉', lng: 104.203121, lat: 30.657864},
+            {name: '彭琪雯', lng: 104.184183, lat: 30.573753},
+            {name: '钱虹羽', lng: 104.239695, lat: 30.650389},
+            {name: '钱思雨', lng: 104.295991, lat: 30.613757},
+            {name: '沈新雅', lng: 104.241349, lat: 30.582026},
+            {name: '孙若菡', lng: 104.238488, lat: 30.583409},
+            {name: '王传盟', lng: 104.279168, lat: 30.556621},
+            {name: '王牧天', lng: 104.254572, lat: 30.650775},
+            {name: '王棋灏', lng: 104.284169, lat: 30.581447},
+            {name: '向芷颖', lng: 104.196583, lat: 30.579774},
+            {name: '严思毅', lng: 104.277980, lat: 30.553960},
+            {name: '杨上淦', lng: 104.265251, lat: 30.674546},
+            {name: '张欣彤', lng: 104.273196, lat: 30.555074},
+            {name: '张雪瑶', lng: 104.179775, lat: 30.652877},
+            {name: '赵雨轩', lng: 104.269878, lat: 30.659920},
+            {name: '郑桔', lng: 104.183578, lat: 30.654916},
+            {name: '周国宏', lng: 104.275576, lat: 30.571958},
+            {name: '邹梓晗', lng: 104.263791, lat: 30.572663}
+        ];
+
+        // 初始化地图
+        function initMap() {
+            // 创建地图实例
+            const map = new BMap.Map('map');
+            
+            // 设置地图中心点（成都市中心）
+            const point = new BMap.Point(104.066, 30.572);
+            map.centerAndZoom(point, 11);
+            
+            // 启用滚轮缩放
+            map.enableScrollWheelZoom(true);
+            
+            // 添加地图控件
+            map.addControl(new BMap.NavigationControl());
+            map.addControl(new BMap.ScaleControl());
+            map.addControl(new BMap.OverviewMapControl());
+            map.addControl(new BMap.MapTypeControl());
+            
+            // 添加学生标记
+            students.forEach((student, index) => {
+                const point = new BMap.Point(student.lng, student.lat);
+                
+                // 创建标记
+                const marker = new BMap.Marker(point);
+                map.addOverlay(marker);
+                
+                // 创建信息窗口
+                const infoWindow = new BMap.InfoWindow(
+                    `<div style="padding: 10px; font-size: 14px;">
+                        <h4 style="margin: 0 0 8px 0; color: #333;">${student.name}</h4>
+                    </div>`,
+                    {
+                        width: 200,
+                        height: 100
+                    }
+                );
+                
+                // 点击标记显示信息窗口
+                marker.addEventListener('click', function() {
+                    map.openInfoWindow(infoWindow, point);
+                });
+                
+                // 添加标签
+                const label = new BMap.Label(student.name, {
+                    offset: new BMap.Size(20, -10)
+                });
+                label.setStyle({
+                    color: '#333',
+                    fontSize: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    border: '1px solid #ccc',
+                    borderRadius: '3px',
+                    padding: '2px 5px'
+                });
+                marker.setLabel(label);
+            });
+            
+            // 隐藏加载提示
+            document.getElementById('loading').style.display = 'none';
+            
+
+            
+            // 自动调整地图视野以包含所有标记
+            if (students.length > 0) {
+                const points = students.map(student => new BMap.Point(student.lng, student.lat));
+                map.setViewport(points);
+            }
+        }
+
+        // 等待百度地图API加载完成
+        function loadMap() {
+            if (typeof BMap !== 'undefined') {
+                initMap();
+            } else {
+                setTimeout(loadMap, 100);
+            }
+        }
+
+        // 页面加载完成后初始化地图
+        window.onload = function() {
+            loadMap();
+        };
+    </script>
+</body>
+</html>
