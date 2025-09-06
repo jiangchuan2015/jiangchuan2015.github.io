@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接龙检查</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;padding:8px;background:#f5f5f5;font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+        .container{max-width:100%;background:#fff;padding:16px;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);margin:0 auto}
+        h1{color:#333;text-align:center;margin-bottom:24px;font-size:24px;font-weight:600}
+        .input-section{margin-bottom:20px}
+        label{display:block;margin-bottom:8px;font-weight:600;color:#555;font-size:16px}
+        textarea{width:100%;min-height:140px;padding:12px;border:2px solid #e1e5e9;border-radius:8px;font-size:16px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Monaco,Menlo,Consolas,monospace;resize:vertical;transition:border-color 0.2s;-webkit-appearance:none}
+        textarea:focus{outline:none;border-color:#007bff;box-shadow:0 0 0 3px rgba(0,123,255,0.1)}
+        .btn-group{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+        button{color:#fff;border:none;padding:14px 20px;font-size:16px;font-weight:500;border-radius:8px;cursor:pointer;flex:1;min-width:140px;transition:all 0.2s;touch-action:manipulation;-webkit-appearance:none;user-select:none}
+        button:active{transform:translateY(0);box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+        
+        /* 检查按钮 - 蓝色 */
+        .btn-check{background:#007bff}
+        .btn-check:hover{background:#0056b3;transform:translateY(-1px)}
+        
+        /* 查询按钮 - 紫色 */
+        .btn-search{background:#6f42c1}
+        .btn-search:hover{background:#5a32a3;transform:translateY(-1px)}
+        
+        /* 清空按钮 - 橙色 */
+        .btn-clear{background:#fd7e14}
+        .btn-clear:hover{background:#e8681a;transform:translateY(-1px)}
+        .copy-btn{background:#28a745;min-width:90px;flex:0 0 auto}
+        .copy-btn:hover{background:#1e7e34}
+        .result-section{margin-top:24px;padding:16px;background:#f8f9fa;border-radius:8px;border-left:4px solid #007bff}
+        .result-title{font-weight:600;color:#333;margin-bottom:12px;font-size:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+        .student-item{padding:10px 0;border-bottom:1px solid #eee;font-family:ui-monospace,SFMono-Regular,'SF Mono',Monaco,Menlo,Consolas,monospace;font-size:15px;word-break:break-all;line-height:1.4}
+        .student-item:last-child{border-bottom:none}
+        .summary{margin-top:12px;padding:12px;background:#fff3cd;border:1px solid #ffeaa7;border-radius:6px;font-weight:600;color:#856404;font-size:15px}
+        .no-missing{background:#d4edda;border-color:#c3e6cb;color:#155724}
+        .search{background:#cce5ff;border-color:#99ccff;color:#004085}
+        
+        /* 移动端优化 */
+        @media (max-width:768px){
+            body{padding:4px;font-size:16px}
+            .container{padding:12px;border-radius:8px;margin:0}
+            h1{font-size:22px;margin-bottom:20px}
+            .input-section{margin-bottom:16px}
+            label{font-size:16px;margin-bottom:6px}
+            textarea{min-height:120px;font-size:16px;padding:10px}
+            .btn-group{gap:8px;margin-bottom:16px}
+            button{padding:12px 16px;font-size:16px;min-width:120px;border-radius:6px}
+            .result-section{padding:12px;margin-top:20px}
+            .result-title{font-size:17px;flex-direction:column;align-items:stretch;gap:8px}
+            .copy-btn{min-width:100%;order:1}
+            .student-item{font-size:14px;padding:8px 0}
+            .summary{font-size:14px;padding:10px}
+        }
+        
+        @media (max-width:480px){
+            body{padding:2px}
+            .container{padding:8px;border-radius:6px}
+            h1{font-size:20px;margin-bottom:16px}
+            textarea{min-height:100px;padding:8px}
+            button{padding:10px 12px;font-size:15px;min-width:100px}
+            .result-section{padding:8px}
+            .result-title{font-size:16px}
+            .student-item{font-size:13px;padding:6px 0}
+            .summary{font-size:13px;padding:8px}
+        }
+        
+        /* 触摸优化 */
+        @media (hover:none) and (pointer:coarse){
+            button{min-height:44px}
+            .copy-btn{min-height:44px}
+            textarea{min-height:120px}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>高2025级12班</h1>
+
+        <div class="input-section">
+            <label for="target">请输入内容：</label>
+            <textarea id="target" placeholder="请粘贴群聊中的接龙信息，系统将自动识别参与人员姓名... 或输入姓名、电话、地址进行查询..."></textarea>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-check" onclick="c()">检查</button>
+            <button class="btn-search" onclick="s()">查询</button>
+            <button class="btn-clear" onclick="r()">清空</button>
+        </div>
+        
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-title" id="resultTitle">
+                检查结果：
+                <button class="copy-btn" onclick="copyResult()">复制</button>
+            </div>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const d=[['白书凡','13709085294','龙泉驿区华信大道88号'],['曹坤','18708171167','龙泉驿区大面镇西博苑3栋1单元'],['曾芮','13551354681','龙泉驿区龙泉街道皇冠湖壹号'],['陈浩天','15882000048','龙泉驿区驿都西路3666号31栋一单元305号'],['陈誉锋','13608052409','龙泉驿区西河街道群晖北路招商依云上城3期'],['陈兆奕','15528061238','龙泉驿区大面镇天府逸家一期'],['单闫','18980868839','龙泉驿区星光小区7栋3单元6楼12号'],['邓鑫','13568950579','龙泉驿区龙泉公园路一段189号13栋3单元701号'],['冯梓媛','15882001114','龙泉驿区西河镇雄飞生活广场'],['何沛东','13880264654','龙泉驿区银河花园1期'],['胡欣怡','13679025987','龙泉驿区西河胜利家园10栋1602'],['黄伟诚','13648063125','龙泉驿区御领春天3期1栋1单元1505号'],['黄心语','13540496858','龙泉驿区东山国际新城E区20栋301'],['贾美莎','13668146027','龙泉驿区航天乙三区305栋一单元5楼2号'],['姜人文','19983217858','龙泉驿区大面东洪路333号（千和意境）'],['黎思彤','15802858363','龙泉驿区大面镇青台山路万卷山'],['李好好','15208205460','龙泉驿区西河镇江南壹品6栋1单元'],['梁家钰','13882142890','龙泉驿区龙都北路666号32-1-1504'],['刘馨雨','15198029475','龙泉驿区十陵镇平安二期'],['刘雨桐','13666129661','龙泉驿区东街4号'],['龙奕瑾','18982059457','龙泉驿区星光小区27栋一单元102'],['卢怡','13881932877','龙泉驿区首创东公元12栋901'],['毛新瑞','18180644667','龙泉驿区西河镇江南一品昊园'],['聂铭轩','15882996688','龙泉驿区蔚蓝路蔚蓝花城b区六栋'],['欧雨嘉','13518196363','龙泉驿区十陵明蜀新村C区2栋2单元'],['彭琪雯','13880910386','龙泉驿区恒大绿州'],['钱虹羽','13980553505','龙泉驿区西河街道滨西绿洲'],['钱思雨','13568844636','龙泉驿区林溪康城11-904'],['沈新雅','19938137505','龙泉驿区北泉路1188号（果壳里的城）'],['孙若菡','18980918908','龙泉驿区皇冠湖壹号'],['王传盟','13628017375','龙泉驿区长柏路御岭春天二期2栋3单元1401号'],['王牧天','18180901099','龙泉驿区西河梨园新居9栋2单元1405'],['王棋灏','13608040256','龙泉驿区春秋名邸'],['吴海涛','136000000','暂未联系上'],['向芷颖','18282200777','龙泉驿区大面街道天府逸家二期16栋二单元2202'],['严思毅','13880125020','龙泉驿区龙泉永兴街186号御岭春天三期6栋2单元2106号'],['杨上淦','17360014726','龙泉驿区黄土镇长伍村26组83号'],['张欣彤','13183871547','龙泉驿区长柏路585号'],['张雪瑶','13980572139','龙泉驿区十陵镇龙锦湾'],['赵雨轩','18628265866','龙泉驿区西河镇简化桥东路66号招商依云上城一期2-2-101'],['郑桔','18328598029','龙泉驿区十陵银发小区2栋4单元8号'],['周国宏','13908053799','龙泉驿区永安路433号汇丰苑1栋3单元302'],['邹梓晗','13540164627','龙泉驿区北泉路188号玺印上院2栋']];
+        
+        function c(){let t=document.getElementById('target').value;if(!t){alert('请先输入接龙信息！');return;}let m=[],p=[];for(let i of d){t.indexOf(i[0])<0?m.push(i):p.push(i);}showResult(m,p,'check');}
+        
+        function s(){let t=document.getElementById('target').value;if(!t){alert('请先输入查询内容！');return;}let f=[];for(let i of d){if(i.join('').indexOf(t)>=0)f.push(i);}showSearchResult(f,t);}
+        
+        function showResult(m,p,type){
+            let rs=document.getElementById('resultSection'),rt=document.getElementById('resultTitle'),rc=document.getElementById('resultContent');
+            rt.innerHTML='检查结果：<button class="copy-btn" onclick="copyResult()">复制</button>';
+            let h='';
+            if(m.length===0){
+                h='<div class="summary no-missing">🎉 太棒了！全班同学都已参与接龙！</div>';
+            }else{
+                h+='<div style="margin-bottom:15px"><h3 style="color:#dc3545;margin-bottom:8px;font-size:15px">📋 共有 '+m.length+' 位同学未参与接龙</h3>';
+                m.forEach((st,i)=>{
+                    h+=`<div class="student-item">${i+1}. ${st[0]} (${st[1]})</div>`;
+                });
+                h+='</div>';
+            }
+            h+='<div style="margin-top:15px"><h3 style="color:#28a745;margin-bottom:8px;font-size:15px">✅ 已参与接龙统计：</h3>';
+            h+=`<div style="padding:8px;background:#d4edda;border-radius:4px;color:#155724;font-size:13px">已参与：<strong>${p.length}</strong> 人，未参与：<strong>${m.length}</strong> 人，总计：<strong>${d.length}</strong> 人</div></div>`;
+            rc.innerHTML=h;
+            rs.style.display='block';
+            rs.scrollIntoView({behavior:'smooth'});
+        }
+        
+        function showSearchResult(f,q){
+            let rs=document.getElementById('resultSection'),rt=document.getElementById('resultTitle'),rc=document.getElementById('resultContent');
+            rt.innerHTML='🔍 查询结果<button class="copy-btn" onclick="copyResult()">复制</button>';
+            let h='';
+            if(f.length===0){
+                h='<div style="padding:10px;color:#666;text-align:center">未找到匹配"'+q+'"的同学信息</div>';
+            }else{
+                h+=`<div style="margin-bottom:15px"><h3 style="color:#28a745;margin-bottom:8px;font-size:15px">✅ 共匹配到 ${f.length} 位同学信息</h3>`;
+                f.forEach((st,i)=>{
+                    h+=`<div class="student-item">${i+1}. ${st[0]} (${st[1]}) - ${st[2]}</div>`;
+                });
+                h+='</div>';
+            }
+            rc.innerHTML=h;
+            rs.style.display='block';
+            rs.scrollIntoView({behavior:'smooth'});
+        }
+        
+        function r(){document.getElementById('resultSection').style.display='none';document.getElementById('target').value='';}
+        
+        function copyResult(){
+            let rc=document.getElementById('resultContent');
+            let text='';
+            let items=rc.querySelectorAll('.student-item');
+            let summary=rc.querySelector('.summary');
+            
+            if(items.length>0){
+                let title=rc.querySelector('h3');
+                if(title)text+=title.textContent.replace('📋 ','').replace('✅ ','')+"\n";
+                items.forEach(item=>{
+                    let itemText = item.textContent;
+                    // 移除地址部分（" - 地址"）
+                    let dashIndex = itemText.lastIndexOf(' - ');
+                    if(dashIndex !== -1){
+                        itemText = itemText.substring(0, dashIndex);
+                    }
+                    // 移除电话号码部分（" (电话)"）
+                    let phoneIndex = itemText.lastIndexOf(' (');
+                    if(phoneIndex !== -1){
+                        itemText = itemText.substring(0, phoneIndex);
+                    }
+                    text+=itemText+"\n";
+                });
+                if(summary&&!summary.classList.contains('search')){
+                    text+=summary.textContent;
+                }
+            }else if(summary){
+                text=summary.textContent;
+            }
+            
+            // 尝试现代复制API
+            if(navigator.clipboard && window.isSecureContext){
+                navigator.clipboard.writeText(text).then(()=>{
+                    showCopySuccess();
+                }).catch(()=>{
+                    fallbackCopy(text);
+                });
+            }else{
+                fallbackCopy(text);
+            }
+        }
+        
+        function showCopySuccess(){
+            let btn=event.target;
+            let orig=btn.textContent;
+            btn.textContent='已复制';
+            btn.style.background='#6c757d';
+            setTimeout(()=>{
+                btn.textContent=orig;
+                btn.style.background='';
+            },1500);
+        }
+        
+        function fallbackCopy(text){
+            // 创建临时文本区域
+            let textarea=document.createElement('textarea');
+            textarea.value=text;
+            textarea.style.position='fixed';
+            textarea.style.opacity='0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try{
+                let successful=document.execCommand('copy');
+                if(successful){
+                    showCopySuccess();
+                }else{
+                    showCopyDialog(text);
+                }
+            }catch(err){
+                showCopyDialog(text);
+            }finally{
+                document.body.removeChild(textarea);
+            }
+        }
+        
+        function showCopyDialog(text){
+            // 创建复制对话框
+            let modal=document.createElement('div');
+            modal.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center';
+            
+            let dialog=document.createElement('div');
+            dialog.style.cssText='background:#fff;padding:20px;border-radius:8px;max-width:90%;max-height:80%;overflow:auto;box-shadow:0 4px 20px rgba(0,0,0,0.3)';
+            
+            dialog.innerHTML=`
+                <h3 style="margin:0 0 15px 0;color:#333">请手动复制以下内容：</h3>
+                <textarea readonly style="width:100%;height:200px;padding:8px;border:1px solid #ddd;border-radius:4px;font-family:monospace;font-size:12px;resize:none">${text}</textarea>
+                <div style="margin-top:15px;text-align:right">
+                    <button onclick="this.closest('[style*=fixed]').remove()" style="background:#007bff;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer">关闭</button>
+                </div>
+            `;
+            
+            modal.appendChild(dialog);
+            document.body.appendChild(modal);
+            
+            // 自动选中文本
+            let textarea=dialog.querySelector('textarea');
+            textarea.select();
+            
+            // 点击背景关闭
+            modal.onclick=function(e){
+                if(e.target===modal)modal.remove();
+            };
+        }
+    </script>
+</body>
+</html>

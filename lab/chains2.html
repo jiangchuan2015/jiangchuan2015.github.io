@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接龙检查</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:Arial,sans-serif;padding:10px;background:#f5f5f5;font-size:14px}
+        .container{max-width:100%;background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        h1{color:#333;text-align:center;margin-bottom:20px;font-size:20px}
+        .input-section{margin-bottom:15px}
+        label{display:block;margin-bottom:5px;font-weight:bold;color:#555;font-size:14px}
+        textarea{width:100%;min-height:120px;padding:8px;border:2px solid #ddd;border-radius:4px;font-size:13px;font-family:monospace;resize:vertical}
+        .btn-group{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+        button{background:#007bff;color:#fff;border:none;padding:10px 16px;font-size:14px;border-radius:4px;cursor:pointer;flex:1;min-width:120px;transition:background 0.3s}
+        button:hover{background:#0056b3}
+        button:active{transform:scale(0.98)}
+        .result-section{margin-top:20px;padding:15px;background:#f8f9fa;border-radius:4px;border-left:4px solid #007bff}
+        .result-title{font-weight:bold;color:#333;margin-bottom:10px;font-size:16px}
+        .student-item{padding:6px 0;border-bottom:1px solid #eee;font-family:monospace;font-size:12px;word-break:break-all}
+        .student-item:last-child{border-bottom:none}
+        .summary{margin-top:10px;padding:8px;background:#fff3cd;border:1px solid #ffeaa7;border-radius:4px;font-weight:bold;color:#856404;font-size:13px}
+        .no-missing{background:#d4edda;border-color:#c3e6cb;color:#155724}
+        @media (max-width:480px){
+            body{padding:5px;font-size:13px}
+            .container{padding:10px}
+            h1{font-size:18px;margin-bottom:15px}
+            textarea{min-height:100px;font-size:12px}
+            button{padding:8px 12px;font-size:13px;min-width:100px}
+            .result-section{padding:10px}
+            .result-title{font-size:15px}
+            .student-item{font-size:11px}
+            .summary{font-size:12px}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>接龙检查系统</h1>
+        
+        <div class="input-section">
+            <label for="chainInput">请输入微信群或QQ群参与接龙的人员信息：</label>
+            <textarea id="chainInput" placeholder="请粘贴群聊中的接龙信息，系统将自动识别参与人员姓名..."></textarea>
+        </div>
+        
+        <div class="btn-group">
+            <button onclick="checkMissingStudents()">检查未接龙同学</button>
+            <button onclick="clearResult()">清空结果</button>
+        </div>
+        
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-title">检查结果：</div>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const s=[{n:"白书凡",p:"13709085294"},{n:"曹坤",p:"18708171167"},{n:"曾芮",p:"13551354681"},{n:"陈浩天",p:"15882000048"},{n:"陈誉锋",p:"13608052409"},{n:"陈兆奕",p:"15528061238"},{n:"单闫",p:"18980868839"},{n:"邓鑫",p:"13568950579"},{n:"冯梓媛",p:"15882001114"},{n:"何沛东",p:"13880264654"},{n:"胡欣怡",p:"13679025987"},{n:"黄伟诚",p:"13648063125"},{n:"黄心语",p:"13540496858"},{n:"贾美莎",p:"13668146027"},{n:"姜人文",p:"19983217858"},{n:"黎思彤",p:"15802858363"},{n:"李好好",p:"15208205460"},{n:"梁家钰",p:"13882142890"},{n:"刘馨雨",p:"15198029475"},{n:"刘雨桐",p:"13666129661"},{n:"龙奕瑾",p:"18982059457"},{n:"卢怡",p:"13881932877"},{n:"毛新瑞",p:"18180644667"},{n:"聂铭轩",p:"15882996688"},{n:"欧雨嘉",p:"13518196363"},{n:"彭琪雯",p:"13880910386"},{n:"钱虹羽",p:"13980553505"},{n:"钱思雨",p:"13568844636"},{n:"沈新雅",p:"19938137505"},{n:"孙若菡",p:"18980918908"},{n:"王传盟",p:"13628017375"},{n:"王牧天",p:"18180901099"},{n:"王棋灏",p:"13608040256"},{n:"向芷颖",p:"18282200777"},{n:"严思毅",p:"13880125020"},{n:"杨上淦",p:"17360014726"},{n:"张欣彤",p:"13183871547"},{n:"张雪瑶",p:"13980572139"},{n:"赵雨轩",p:"18628265866"},{n:"郑桔",p:"18328598029"},{n:"周国宏",p:"13908053799"},{n:"邹梓晗",p:"13540164627"}];
+        function checkMissingStudents(){const i=document.getElementById('chainInput').value.trim();if(!i){alert('请先输入接龙信息！');return;}const m=[],p=[];s.forEach(st=>{i.includes(st.n)?p.push(st):m.push(st);});displayResult(m,p);}
+        function displayResult(m,p){const rs=document.getElementById('resultSection'),rc=document.getElementById('resultContent');let h='';if(m.length===0){h='<div class="summary no-missing">🎉 太棒了！全班同学都已参与接龙！</div>';}else{h+='<div style="margin-bottom:15px"><h3 style="color:#dc3545;margin-bottom:8px;font-size:15px">📋 未参与接龙的同学：</h3>';m.forEach((st,i)=>{h+=`<div class="student-item">${i+1}. ${st.n} (${st.p})</div>`;});h+=`<div class="summary">共有 <strong>${m.length}</strong> 位同学未参与接龙</div></div>`;}h+='<div style="margin-top:15px"><h3 style="color:#28a745;margin-bottom:8px;font-size:15px">✅ 已参与接龙统计：</h3>';h+=`<div style="padding:8px;background:#d4edda;border-radius:4px;color:#155724;font-size:13px">已参与：<strong>${p.length}</strong> 人，未参与：<strong>${m.length}</strong> 人，总计：<strong>${s.length}</strong> 人</div></div>`;rc.innerHTML=h;rs.style.display='block';rs.scrollIntoView({behavior:'smooth'});}
+        function clearResult(){document.getElementById('chainInput').value='';document.getElementById('resultSection').style.display='none';}
+    </script>
+</body>
+</html>
