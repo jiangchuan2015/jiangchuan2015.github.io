@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>成绩展示与可视化</title>
+
+  <style>
+    /* 页面基础布局与主题色 */
+    :root {
+      --bg: #f7f9fb;
+      --card: #ffffff;
+      --text: #222;
+      --muted: #666;
+      --accent: #2563eb;
+      --danger: #c0392b;
+      --ok: #16a085;
+      --border: #e5e7eb;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, .06);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      align-items: center;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    select,
+    .mode-switch {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .mode-switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* 表格样式 */
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #f2f4f8;
+      border-bottom: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    tbody td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    tbody tr:hover {
+      background: #fafafa;
+    }
+
+    .sort-ind {
+      color: var(--accent);
+      margin-left: 6px;
+      font-size: 12px;
+    }
+
+    .invalid {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    tbody tr.row-highlight {
+      background: #fff7e6;
+    }
+
+    tbody tr.row-highlight td {
+      font-weight: 600;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status .badge {
+      background: #eef2ff;
+      color: var(--accent);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .status .warn {
+      background: #fdecea;
+      color: var(--danger);
+    }
+
+    /* 图表容器 */
+    .charts-row {
+      display: flex;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .chart-box {
+      flex: 1;
+    }
+
+    .chart-box.chart-scores {
+      flex: 2;
+    }
+
+    .chart-box.chart-summary {
+      flex: 1;
+    }
+
+    #chartScores,
+    #chartSummary {
+      width: 100%;
+      height: 420px;
+    }
+
+    @media (max-width: 720px) {
+
+      #chartScores,
+      #chartSummary {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="field">
+          <label for="nameSelect">学生：</label>
+          <select id="nameSelect" style="width: 120px;"></select>
+        </div>
+        <div class="field">
+          <label for="examSelect">考试：</label>
+          <select id="examSelect" style="width: 120px;"></select>
+        </div>
+
+      </div>
+      <div class="status" id="statusBar"></div>
+    </div>
+
+    <div class="card charts-row">
+      <div class="chart-box chart-scores">
+        <div id="chartScores"></div>
+      </div>
+      <div class="chart-box chart-summary">
+        <div id="chartSummary"></div>
+      </div>
+    </div>
+
+    <div class="card table-wrap">
+      <table id="scoreTable">
+        <thead>
+          <tr id="tableHeaderRow"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 数据源：预置的成绩JSON，字段包含“考试”与各科分数，以及“总分年排”。
+     * 注意：页面初始化时会计算并写入“总分/理科总分”。
+     */
+    const DATA_BASE = [
+      { 序号: '251001', 姓名: '白书凡', 考试: '10月考', 语文: 121, 数学: 76, 英语: 131.5, 物理: 64, 化学: 75, 生物: 89, 政治: 89, 历史: 75, 地理: 70, 总分年排: 179 },
+      { 序号: '251002', 姓名: '曹坤', 考试: '10月考', 语文: 110, 数学: 101, 英语: 117.5, 物理: 59, 化学: 92, 生物: 95, 政治: 88, 历史: 68, 地理: 84, 总分年排: 93 },
+      { 序号: '251003', 姓名: '曾芮', 考试: '10月考', 语文: 114, 数学: 97, 英语: 111.5, 物理: 69, 化学: 83, 生物: 84, 政治: 87, 历史: 82, 地理: 82, 总分年排: 110 },
+      { 序号: '251004', 姓名: '陈浩天', 考试: '10月考', 语文: 113, 数学: 107, 英语: 119, 物理: 92, 化学: 74, 生物: 81, 政治: 67, 历史: 69, 地理: 70, 总分年排: 170 },
+      { 序号: '251005', 姓名: '陈誉锋', 考试: '10月考', 语文: 103, 数学: 100, 英语: 128, 物理: 83, 化学: 94, 生物: 87, 政治: 65, 历史: 58, 地理: 88, 总分年排: 125 },
+      { 序号: '251006', 姓名: '陈兆奕', 考试: '10月考', 语文: 110, 数学: 100, 英语: 111.5, 物理: 64, 化学: 77, 生物: 76, 政治: 82, 历史: 62, 地理: 80, 总分年排: 304 },
+      { 序号: '251007', 姓名: '单闫', 考试: '10月考', 语文: 107, 数学: 76, 英语: 104, 物理: 64, 化学: 87, 生物: 83, 政治: 86, 历史: 73, 地理: 82, 总分年排: 305 },
+      { 序号: '251008', 姓名: '邓鑫', 考试: '10月考', 语文: 104, 数学: 107, 英语: 121, 物理: 74, 化学: 78, 生物: 79, 政治: 80, 历史: 67, 地理: 76, 总分年排: 199 },
+      { 序号: '251009', 姓名: '冯梓媛', 考试: '10月考', 语文: 101, 数学: 77, 英语: 130, 物理: 70, 化学: 74, 生物: 72, 政治: 71, 历史: 68, 地理: 56, 总分年排: 539 },
+      { 序号: '251010', 姓名: '何沛东', 考试: '10月考', 语文: 105, 数学: 0, 英语: 0, 物理: 0, 化学: 81, 生物: 78, 政治: 0, 历史: 0, 地理: 0, 总分年排: 937 },
+      { 序号: '251011', 姓名: '胡欣怡', 考试: '10月考', 语文: 106, 数学: 88, 英语: 113, 物理: 76, 化学: 77, 生物: 82, 政治: 78, 历史: 62, 地理: 64, 总分年排: 404 },
+      { 序号: '251012', 姓名: '黄伟诚', 考试: '10月考', 语文: 94, 数学: 0, 英语: 118, 物理: 0, 化学: 77, 生物: 75, 政治: 0, 历史: 0, 地理: 0, 总分年排: 932 },
+      { 序号: '251013', 姓名: '黄心语', 考试: '10月考', 语文: 109, 数学: 113, 英语: 114, 物理: 74, 化学: 85, 生物: 87, 政治: 88, 历史: 65, 地理: 80, 总分年排: 91 },
+      { 序号: '251014', 姓名: '贾美莎', 考试: '10月考', 语文: 115, 数学: 118, 英语: 115, 物理: 94, 化学: 90, 生物: 95, 政治: 86, 历史: 68, 地理: 84, 总分年排: 16 },
+      { 序号: '251015', 姓名: '姜人文', 考试: '10月考', 语文: 107, 数学: 120, 英语: 127, 物理: 87, 化学: 95, 生物: 80, 政治: 61, 历史: 58, 地理: 78, 总分年排: 95 },
+      { 序号: '251016', 姓名: '黎思彤', 考试: '10月考', 语文: 106, 数学: 97, 英语: 112.5, 物理: 80, 化学: 71, 生物: 85, 政治: 88, 历史: 69, 地理: 80, 总分年排: 189 },
+      { 序号: '251017', 姓名: '李好好', 考试: '10月考', 语文: 104, 数学: 99, 英语: 126.5, 物理: 79, 化学: 74, 生物: 92, 政治: 85, 历史: 78, 地理: 86, 总分年排: 69 },
+      { 序号: '251018', 姓名: '梁家钰', 考试: '10月考', 语文: 114, 数学: 89, 英语: 109.5, 物理: 59, 化学: 88, 生物: 85, 政治: 88, 历史: 83, 地理: 82, 总分年排: 152 },
+      { 序号: '251019', 姓名: '刘馨雨', 考试: '10月考', 语文: 115, 数学: 91, 英语: 116.5, 物理: 74, 化学: 74, 生物: 93, 政治: 88, 历史: 66, 地理: 78, 总分年排: 158 },
+      { 序号: '251020', 姓名: '刘雨桐', 考试: '10月考', 语文: 110, 数学: 115, 英语: 125, 物理: 82, 化学: 92, 生物: 89, 政治: 63, 历史: 76, 地理: 80, 总分年排: 52 },
+      { 序号: '251021', 姓名: '龙奕瑾', 考试: '10月考', 语文: 97, 数学: 50, 英语: 98.5, 物理: 51, 化学: 51, 生物: 70, 政治: 73, 历史: 71, 地理: 52, 总分年排: 869 },
+      { 序号: '251022', 姓名: '卢怡', 考试: '10月考', 语文: 93, 数学: 90, 英语: 107, 物理: 63, 化学: 67, 生物: 71, 政治: 69, 历史: 70, 地理: 70, 总分年排: 614 },
+      { 序号: '251023', 姓名: '毛新瑞', 考试: '10月考', 语文: 100, 数学: 110, 英语: 118.5, 物理: 89, 化学: 96, 生物: 84, 政治: 79, 历史: 78, 地理: 82, 总分年排: 44 },
+      { 序号: '251024', 姓名: '聂铭轩', 考试: '10月考', 语文: 112, 数学: 86, 英语: 110, 物理: 83, 化学: 74, 生物: 85, 政治: 80, 历史: 75, 地理: 78, 总分年排: 210 },
+      { 序号: '251025', 姓名: '欧雨嘉', 考试: '10月考', 语文: 89, 数学: 67, 英语: 122, 物理: 71, 化学: 76, 生物: 64, 政治: 42, 历史: 55, 地理: 66, 总分年排: 788 },
+      { 序号: '251026', 姓名: '彭琪雯', 考试: '10月考', 语文: 109, 数学: 80, 英语: 133, 物理: 71, 化学: 77, 生物: 86, 政治: 80, 历史: 65, 地理: 78, 总分年排: 227 },
+      { 序号: '251027', 姓名: '钱虹羽', 考试: '10月考', 语文: 117, 数学: 69, 英语: 119.5, 物理: 72, 化学: 77, 生物: 90, 政治: 83, 历史: 68, 地理: 82, 总分年排: 232 },
+      { 序号: '251028', 姓名: '钱思雨', 考试: '10月考', 语文: 115, 数学: 113, 英语: 122, 物理: 87, 化学: 94, 生物: 94, 政治: 74, 历史: 66, 地理: 66, 总分年排: 55 },
+      { 序号: '251029', 姓名: '沈新雅', 考试: '10月考', 语文: 112, 数学: 61, 英语: 128, 物理: 68, 化学: 75, 生物: 88, 政治: 67, 历史: 64, 地理: 84, 总分年排: 395 },
+      { 序号: '251030', 姓名: '孙若菡', 考试: '10月考', 语文: 101, 数学: 89, 英语: 117.5, 物理: 69, 化学: 82, 生物: 70, 政治: 77, 历史: 67, 地理: 48, 总分年排: 532 },
+      { 序号: '251031', 姓名: '王传盟', 考试: '10月考', 语文: 97, 数学: 89, 英语: 91.5, 物理: 70, 化学: 42, 生物: 64, 政治: 61, 历史: 62, 地理: 68, 总分年排: 805 },
+      { 序号: '251032', 姓名: '王牧天', 考试: '10月考', 语文: 71, 数学: 67, 英语: 107, 物理: 72, 化学: 62, 生物: 69, 政治: 77, 历史: 67, 地理: 80, 总分年排: 734 },
+      { 序号: '251033', 姓名: '王棋灏', 考试: '10月考', 语文: 99, 数学: 107, 英语: 104, 物理: 67, 化学: 92, 生物: 88, 政治: 64, 历史: 57, 地理: 74, 总分年排: 364 },
+      { 序号: '251034', 姓名: '吴海涛', 考试: '10月考', 语文: 96, 数学: 67, 英语: 130.5, 物理: 80, 化学: 83, 生物: 87, 政治: 86, 历史: 74, 地理: 84, 总分年排: 196 },
+      { 序号: '251035', 姓名: '向芷颖', 考试: '10月考', 语文: 101, 数学: 64, 英语: 120, 物理: 62, 化学: 67, 生物: 85, 政治: 84, 历史: 64, 地理: 69, 总分年排: 554 },
+      { 序号: '251036', 姓名: '严思毅', 考试: '10月考', 语文: 106, 数学: 132, 英语: 131, 物理: 72, 化学: 86, 生物: 81, 政治: 94, 历史: 84, 地理: 86, 总分年排: 8 },
+      { 序号: '251037', 姓名: '杨上淦', 考试: '10月考', 语文: 95, 数学: 88, 英语: 102, 物理: 62, 化学: 70, 生物: 82, 政治: 75, 历史: 73, 地理: 80, 总分年排: 498 },
+      { 序号: '251038', 姓名: '张欣彤', 考试: '10月考', 语文: 104, 数学: 64, 英语: 118.5, 物理: 59, 化学: 77, 生物: 83, 政治: 81, 历史: 70, 地理: 79, 总分年排: 458 },
+      { 序号: '251039', 姓名: '张雪瑶', 考试: '10月考', 语文: 105, 数学: 84, 英语: 128, 物理: 78, 化学: 79, 生物: 76, 政治: 88, 历史: 56, 地理: 70, 总分年排: 297 },
+      { 序号: '251040', 姓名: '赵雨轩', 考试: '10月考', 语文: 102, 数学: 131, 英语: 126.5, 物理: 87, 化学: 85, 生物: 97, 政治: 75, 历史: 75, 地理: 85, 总分年排: 17 },
+      { 序号: '251041', 姓名: '郑桔', 考试: '10月考', 语文: 110, 数学: 115, 英语: 126, 物理: 74, 化学: 75, 生物: 87, 政治: 73, 历史: 68, 地理: 74, 总分年排: 140 },
+      { 序号: '251042', 姓名: '周国宏', 考试: '10月考', 语文: 106, 数学: 95, 英语: 127, 物理: 82, 化学: 48, 生物: 72, 政治: 57, 历史: 61, 地理: 62, 总分年排: 578 },
+      { 序号: '251043', 姓名: '邹梓晗', 考试: '10月考', 语文: 108, 数学: 64, 英语: 112.5, 物理: 50, 化学: 65, 生物: 72, 政治: 62, 历史: 79, 地理: 72, 总分年排: 680 },
+      { 序号: '251101', 姓名: '白书凡', 考试: '期中考', 语文: 105, 数学: 112, 英语: 127.5, 物理: 71, 化学: 75, 生物: 84, 政治: 77, 历史: 77, 地理: 66, 总分年排: 109 },
+      { 序号: '251102', 姓名: '曹坤', 考试: '期中考', 语文: 97, 数学: 114, 英语: 118, 物理: 70, 化学: 88, 生物: 93, 政治: 77, 历史: 83, 地理: 79, 总分年排: 46 },
+      { 序号: '251103', 姓名: '曾芮', 考试: '期中考', 语文: 109, 数学: 127, 英语: 111.5, 物理: 77, 化学: 82, 生物: 90, 政治: 72, 历史: 82, 地理: 78, 总分年排: 29 },
+      { 序号: '251104', 姓名: '陈浩天', 考试: '期中考', 语文: 113, 数学: 99, 英语: 122.5, 物理: 47, 化学: 72, 生物: 59, 政治: 59, 历史: 88, 地理: 63, 总分年排: 436 },
+      { 序号: '251105', 姓名: '陈誉锋', 考试: '期中考', 语文: 99, 数学: 111, 英语: 116, 物理: 57, 化学: 79, 生物: 93, 政治: 70, 历史: 78, 地理: 85, 总分年排: 131 },
+      { 序号: '251106', 姓名: '陈兆奕', 考试: '期中考', 语文: 105, 数学: 114, 英语: 110, 物理: 44, 化学: 59, 生物: 60, 政治: 78, 历史: 68, 地理: 63, 总分年排: 554 },
+      { 序号: '251107', 姓名: '单闫', 考试: '期中考', 语文: 82, 数学: 89, 英语: 109.5, 物理: 65, 化学: 78, 生物: 82, 政治: 61, 历史: 78, 地理: 70, 总分年排: 480 },
+      { 序号: '251108', 姓名: '邓鑫', 考试: '期中考', 语文: 96, 数学: 99, 英语: 121, 物理: 84, 化学: 78, 生物: 80, 政治: 77, 历史: 83, 地理: 80, 总分年排: 95 },
+      { 序号: '251109', 姓名: '冯梓媛', 考试: '期中考', 语文: 105, 数学: 108, 英语: 135, 物理: 44, 化学: 77, 生物: 51, 政治: 65, 历史: 75, 地理: 56, 总分年排: 470 },
+      { 序号: '251110', 姓名: '何沛东', 考试: '期中考', 语文: 104, 数学: 102, 英语: 125.5, 物理: 61, 化学: 77, 生物: 86, 政治: 55, 历史: 75, 地理: 64, 总分年排: 303 },
+      { 序号: '251111', 姓名: '胡欣怡', 考试: '期中考', 语文: 94, 数学: 86, 英语: 125.5, 物理: 56, 化学: 68, 生物: 76, 政治: 66, 历史: 61, 地理: 53, 总分年排: 623 },
+      { 序号: '251112', 姓名: '黄伟诚', 考试: '期中考', 语文: 110, 数学: 106, 英语: 113, 物理: 62, 化学: 80, 生物: 85, 政治: 64, 历史: 76, 地理: 61, 总分年排: 269 },
+      { 序号: '251113', 姓名: '黄心语', 考试: '期中考', 语文: 106, 数学: 114, 英语: 134, 物理: 68, 化学: 81, 生物: 78, 政治: 72, 历史: 71, 地理: 66, 总分年排: 124 },
+      { 序号: '251114', 姓名: '贾美莎', 考试: '期中考', 语文: 102, 数学: 111, 英语: 127, 物理: 79, 化学: 84, 生物: 93, 政治: 73, 历史: 77, 地理: 82, 总分年排: 31 },
+      { 序号: '251115', 姓名: '姜人文', 考试: '期中考', 语文: 97, 数学: 114, 英语: 113, 物理: 74, 化学: 87, 生物: 82, 政治: 56, 历史: 89, 地理: 65, 总分年排: 177 },
+      { 序号: '251116', 姓名: '黎思彤', 考试: '期中考', 语文: 108, 数学: 100, 英语: 109.5, 物理: 50, 化学: 70, 生物: 73, 政治: 72, 历史: 83, 地理: 76, 总分年排: 345 },
+      { 序号: '251117', 姓名: '李好好', 考试: '期中考', 语文: 106, 数学: 104, 英语: 125.5, 物理: 57, 化学: 74, 生物: 85, 政治: 59, 历史: 80, 地理: 77, 总分年排: 223 },
+      { 序号: '251118', 姓名: '梁家钰', 考试: '期中考', 语文: 110, 数学: 124, 英语: 101, 物理: 69, 化学: 84, 生物: 92, 政治: 74, 历史: 88, 地理: 82, 总分年排: 36 },
+      { 序号: '251119', 姓名: '刘馨雨', 考试: '期中考', 语文: 95, 数学: 121, 英语: 126.5, 物理: 74, 化学: 61, 生物: 84, 政治: 72, 历史: 79, 地理: 60, 总分年排: 200 },
+      { 序号: '251120', 姓名: '刘雨桐', 考试: '期中考', 语文: 109, 数学: 106, 英语: 99.5, 物理: 71, 化学: 77, 生物: 67, 政治: 67, 历史: 64, 地理: 68, 总分年排: 411 },
+      { 序号: '251121', 姓名: '龙奕瑾', 考试: '期中考', 语文: 103, 数学: 89, 英语: 77.5, 物理: 52, 化学: 68, 生物: 54, 政治: 50, 历史: 69, 地理: 54, 总分年排: 848 },
+      { 序号: '251122', 姓名: '卢怡', 考试: '期中考', 语文: 100, 数学: 82, 英语: 95.5, 物理: 31, 化学: 71, 生物: 83, 政治: 66, 历史: 60, 地理: 71, 总分年排: 727 },
+      { 序号: '251123', 姓名: '毛新瑞', 考试: '期中考', 语文: 107, 数学: 112, 英语: 118.5, 物理: 73, 化学: 95, 生物: 78, 政治: 85, 历史: 81, 地理: 67, 总分年排: 52 },
+      { 序号: '251124', 姓名: '聂铭轩', 考试: '期中考', 语文: 102, 数学: 126, 英语: 124, 物理: 59, 化学: 77, 生物: 72, 政治: 75, 历史: 67, 地理: 73, 总分年排: 190 },
+      { 序号: '251125', 姓名: '欧雨嘉', 考试: '期中考', 语文: 106, 数学: 100, 英语: 116.5, 物理: 59, 化学: 46, 生物: 55, 政治: 64, 历史: 52, 地理: 61, 总分年排: 727 },
+      { 序号: '251126', 姓名: '彭琪雯', 考试: '期中考', 语文: 116, 数学: 110, 英语: 139, 物理: 52, 化学: 87, 生物: 84, 政治: 63, 历史: 77, 地理: 65, 总分年排: 113 },
+      { 序号: '251127', 姓名: '钱虹羽', 考试: '期中考', 语文: 103, 数学: 113, 英语: 129, 物理: 54, 化学: 81, 生物: 83, 政治: 83, 历史: 77, 地理: 81, 总分年排: 82 },
+      { 序号: '251128', 姓名: '钱思雨', 考试: '期中考', 语文: 109, 数学: 108, 英语: 122.5, 物理: 73, 化学: 83, 生物: 83, 政治: 61, 历史: 59, 地理: 59, 总分年排: 267 },
+      { 序号: '251129', 姓名: '沈新雅', 考试: '期中考', 语文: 106, 数学: 111, 英语: 129.5, 物理: 56, 化学: 83, 生物: 73, 政治: 62, 历史: 81, 地理: 65, 总分年排: 225 },
+      { 序号: '251130', 姓名: '孙若菡', 考试: '期中考', 语文: 118, 数学: 106, 英语: 129, 物理: 48, 化学: 83, 生物: 75, 政治: 65, 历史: 65, 地理: 55, 总分年排: 332 },
+      { 序号: '251131', 姓名: '王传盟', 考试: '期中考', 语文: 96, 数学: 105, 英语: 110.5, 物理: 51, 化学: 59, 生物: 69, 政治: 60, 历史: 65, 地理: 60, 总分年排: 666 },
+      { 序号: '251132', 姓名: '王牧天', 考试: '期中考', 语文: 93, 数学: 111, 英语: 117, 物理: 50, 化学: 71, 生物: 82, 政治: 73, 历史: 80, 地理: 65, 总分年排: 341 },
+      { 序号: '251133', 姓名: '王棋灏', 考试: '期中考', 语文: 103, 数学: 96, 英语: 97.5, 物理: 71, 化学: 76, 生物: 80, 政治: 64, 历史: 67, 地理: 65, 总分年排: 452 },
+      { 序号: '251134', 姓名: '吴海涛', 考试: '期中考', 语文: 100, 数学: 112, 英语: 122.5, 物理: 73, 化学: 80, 生物: 89, 政治: 70, 历史: 70, 地理: 79, 总分年排: 105 },
+      { 序号: '251135', 姓名: '向芷颖', 考试: '期中考', 语文: 106, 数学: 82, 英语: 129, 物理: 58, 化学: 63, 生物: 80, 政治: 60, 历史: 71, 地理: 53, 总分年排: 546 },
+      { 序号: '251136', 姓名: '严思毅', 考试: '期中考', 语文: 108, 数学: 113, 英语: 135.5, 物理: 72, 化学: 85, 生物: 77, 政治: 63, 历史: 87, 地理: 76, 总分年排: 52 },
+      { 序号: '251137', 姓名: '杨上淦', 考试: '期中考', 语文: 114, 数学: 104, 英语: 100, 物理: 59, 化学: 63, 生物: 73, 政治: 67, 历史: 72, 地理: 67, 总分年排: 455 },
+      { 序号: '251138', 姓名: '张欣彤', 考试: '期中考', 语文: 97, 数学: 88, 英语: 110, 物理: 61, 化学: 67, 生物: 71, 政治: 62, 历史: 65, 地理: 63, 总分年排: 632 },
+      { 序号: '251139', 姓名: '张雪瑶', 考试: '期中考', 语文: 102, 数学: 119, 英语: 128, 物理: 64, 化学: 67, 生物: 85, 政治: 58, 历史: 49, 地理: 64, 总分年排: 370 },
+      { 序号: '251140', 姓名: '赵雨轩', 考试: '期中考', 语文: 94, 数学: 122, 英语: 129, 物理: 83, 化学: 83, 生物: 86, 政治: 66, 历史: 71, 地理: 66, 总分年排: 92 },
+      { 序号: '251141', 姓名: '郑桔', 考试: '期中考', 语文: 102, 数学: 116, 英语: 120, 物理: 59, 化学: 86, 生物: 85, 政治: 60, 历史: 87, 地理: 78, 总分年排: 113 },
+      { 序号: '251142', 姓名: '周国宏', 考试: '期中考', 语文: 102, 数学: 120, 英语: 126, 物理: 63, 化学: 58, 生物: 52, 政治: 57, 历史: 60, 地理: 58, 总分年排: 577 },
+      { 序号: '251143', 姓名: '邹梓晗', 考试: '期中考', 语文: 107, 数学: 90, 英语: 118, 物理: 51, 化学: 60, 生物: 65, 政治: 69, 历史: 79, 地理: 68, 总分年排: 516 },
+
+      // { 序号: '251215', 姓名: '姜人文', 考试: '12月考', 语文: 105, 数学: 130, 英语: 123, 物理: 82, 化学: 95, 生物: 73, 政治: 62, 历史: 76, 地理: 58, 总分年排: 65 },
+      // { 序号: '260115', 姓名: '姜人文', 考试: '期末考', 语文: 112, 数学: 135, 英语: 128, 物理: 93, 化学: 99, 生物: 85, 政治: 65, 历史: 68, 地理: 62, 总分年排: 36 },
+    ];
+
+
+
+    /**
+     * 表格列定义与科目列表常量。
+     */
+    const KEY_EXAM = '考试';
+    const KEY_NAME = '姓名';
+    const KEY_TOTAL = '总分';
+    const KEY_SCI_TOTAL = '理科总分';
+    const KEY_TOTAL_CLASS_RANK = '总分班排';
+    const KEY_SCI_CLASS_RANK = '理科班排';
+    const KEY_TOTAL_YEAR_RANK = '总分年排';
+    const DEFAULT_NAME = '姜人文';
+    const NS_SVG = 'http://www.w3.org/2000/svg';
+    const TICK_SCORE_STEP_SUBJECTS = 25;
+    const TICK_SCORE_STEP_SUMMARY = 150;
+    const TICK_RANK_STEP = 5;
+    const SCORE_HIGHLIGHT_RATIO = 0.8;
+    const COLOR_SCORE_HIGHLIGHT = '#FF3333';
+    const FULL_MARKS = {
+      '语文': 150, '数学': 150, '英语': 150,
+      '物理': 100, '化学': 100, '生物': 100,
+      '政治': 100, '历史': 100, '地理': 100,
+      [KEY_TOTAL]: 1050,
+      [KEY_SCI_TOTAL]: 750
+    };
+
+    const TABLE_COLUMNS = [
+      '序号', KEY_NAME, KEY_EXAM, '语文', '数学', '英语', '物理', '化学', '生物', '政治', '历史', '地理', KEY_TOTAL, KEY_TOTAL_CLASS_RANK, KEY_TOTAL_YEAR_RANK, KEY_SCI_TOTAL, KEY_SCI_CLASS_RANK
+    ];
+    const SUBJECTS = ['语文', '数学', '英语', '物理', '化学', '生物', '政治', '历史', '地理'];
+
+    let records = [];
+    let byNameExam = {};
+    let namesOrder = [];
+    let examsOrder = [];
+
+    /**
+     * 预计算总分与理科总分并写回数据源。
+     * 规则：
+     * - 总分 = 语文+数学+英语+物理+化学+生物+政治+历史+地理
+     * - 理科总分 = 语文+数学+英语+物理+化学+生物
+     */
+    function precomputeDataBaseTotals() {
+      for (const r of DATA_BASE) {
+        const total = (r['语文'] || 0) + (r['数学'] || 0) + (r['英语'] || 0) + (r['物理'] || 0) + (r['化学'] || 0) + (r['生物'] || 0) + (r['政治'] || 0) + (r['历史'] || 0) + (r['地理'] || 0);
+        const sciTotal = (r['语文'] || 0) + (r['数学'] || 0) + (r['英语'] || 0) + (r['物理'] || 0) + (r['化学'] || 0) + (r['生物'] || 0);
+        r['总分'] = total;
+        r['理科总分'] = sciTotal;
+      }
+    }
+
+    /**
+     * 构建运行态数据：
+     * - records：平铺数组
+     * - namesOrder/examsOrder：去重的出现顺序
+     * - byNameExam：按“姓名→考试”的索引
+     */
+    function buildData() {
+      records = DATA_BASE.map(r => ({ ...r }));
+      namesOrder = [];
+      examsOrder = [];
+      for (const rec of records) {
+        if (!namesOrder.includes(rec[KEY_NAME])) namesOrder.push(rec[KEY_NAME]);
+        if (!examsOrder.includes(rec[KEY_EXAM])) examsOrder.push(rec[KEY_EXAM]);
+      }
+      byNameExam = buildIndex(records);
+    }
+
+    /**
+     * 计算班排（同一考试内）：
+     * - 总分班排：按总分降序，同分按姓名升序
+     * - 理科班排：按理科总分降序，同分按姓名升序
+     */
+    function computeClassRanks(arr) {
+      const byExam = new Map();
+      for (const r of arr) {
+        const e = r[KEY_EXAM];
+        if (!byExam.has(e)) byExam.set(e, []);
+        byExam.get(e).push(r);
+      }
+      // 每个考试分别计算
+      for (const [exam, list] of byExam.entries()) {
+        // 总分班排
+        const byTotal = [...list].sort((a, b) => {
+          if (b[KEY_TOTAL] !== a[KEY_TOTAL]) return b[KEY_TOTAL] - a[KEY_TOTAL];
+          return a[KEY_NAME].localeCompare(b[KEY_NAME], 'zh-Hans');
+        });
+        byTotal.forEach((rec, idx) => { rec[KEY_TOTAL_CLASS_RANK] = idx + 1; });
+
+        // 理科班排
+        const bySci = [...list].sort((a, b) => {
+          if (b[KEY_SCI_TOTAL] !== a[KEY_SCI_TOTAL]) return b[KEY_SCI_TOTAL] - a[KEY_SCI_TOTAL];
+          return a[KEY_NAME].localeCompare(b[KEY_NAME], 'zh-Hans');
+        });
+        bySci.forEach((rec, idx) => { rec[KEY_SCI_CLASS_RANK] = idx + 1; });
+      }
+    }
+
+    /**
+     * 构建姓名-考试索引结构，便于快速取某生某次考试记录。
+     */
+    function buildIndex(arr) {
+      const idx = {};
+      for (const r of arr) {
+        const name = r[KEY_NAME];
+        const exam = r[KEY_EXAM];
+        if (!idx[name]) idx[name] = {};
+        idx[name][exam] = r;
+      }
+      return idx;
+    }
+
+    /**
+     * 填充“学生/考试”下拉选项，并设置默认值：
+     * - 学生默认“姜人文”（不存在则取首个）
+     * - 考试默认首个出现项
+     */
+    function fillSelectOptions() {
+      const nameSel = document.getElementById('nameSelect');
+      const examSel = document.getElementById('examSelect');
+      nameSel.innerHTML = namesOrder.map(n => `<option value="${n}">${n}</option>`).join('');
+      examSel.innerHTML = examsOrder.map(e => `<option value="${e}">${e}</option>`).join('');
+      // 默认第一个
+      if (namesOrder.length) nameSel.value = namesOrder.includes(DEFAULT_NAME) ? DEFAULT_NAME : namesOrder[0];
+      if (examsOrder.length) examSel.value = examsOrder[0];
+    }
+
+    /**
+     * 渲染成绩表格与列点击排序：
+     * - 默认按“总分班排”升序
+     * - 仅显示当前考试的所有学生
+     * - 选中学生高亮整行
+     */
+    const sortState = { key: '总分班排', order: 'asc' };
+    function renderTable() {
+      const name = document.getElementById('nameSelect').value;
+      const exam = document.getElementById('examSelect').value;
+      const headerRow = document.getElementById('tableHeaderRow');
+      const tbody = document.getElementById('tableBody');
+
+      // 头部
+      headerRow.innerHTML = TABLE_COLUMNS.map(col => {
+        const ind = sortState.key === col ? (sortState.order === 'asc' ? '▲' : '▼') : '';
+        return `<th data-key="${col}">${col}${ind ? `<span class='sort-ind'>${ind}</span>` : ''}</th>`;
+      }).join('');
+
+      // 绑定排序事件
+      headerRow.querySelectorAll('th').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.getAttribute('data-key');
+          if (sortState.key === key) {
+            sortState.order = sortState.order === 'asc' ? 'desc' : 'asc';
+          } else {
+            sortState.key = key; sortState.order = 'asc';
+          }
+          renderTable();
+        });
+      });
+
+      // 过滤记录：默认展示当前考试下所有学生
+      let filtered = records.filter(r => r[KEY_EXAM] === exam);
+
+      // 排序
+      const key = sortState.key; const order = sortState.order;
+      if (key === '序号') {
+        if (order === 'desc') filtered.reverse();
+      } else {
+        filtered.sort((a, b) => {
+          const av = a[key]; const bv = b[key];
+          const na = typeof av === 'number'; const nb = typeof bv === 'number';
+          let cmp;
+          if (na && nb) cmp = av - bv; else cmp = String(av).localeCompare(String(bv), 'zh-Hans');
+          return order === 'asc' ? cmp : -cmp;
+        });
+      }
+
+      // 行渲染
+      const frag = document.createDocumentFragment();
+      if (filtered.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.setAttribute('colspan', String(TABLE_COLUMNS.length));
+        td.textContent = '当前筛选无数据';
+        tr.appendChild(td);
+        frag.appendChild(tr);
+        } else {
+            for (let i = 0; i < filtered.length; i++) {
+                const rec = filtered[i];
+                const tr = document.createElement('tr');
+                if (rec[KEY_NAME] === name) tr.className = 'row-highlight';
+                for (const col of TABLE_COLUMNS) {
+                    const td = document.createElement('td');
+                    if (col === '序号') {
+                        td.textContent = String(i + 1);
+                    } else {
+                        const val = rec[col];
+                        td.textContent = val != null ? String(val) : '';
+                    }
+                    tr.appendChild(td);
+                }
+                frag.appendChild(tr);
+            }
+        }
+        tbody.replaceChildren(frag);
+    }
+
+    /**
+     * 绘制分组柱状图（SVG）：
+     * @param {string} titleText 标题文本
+     * @param {string[]} categories 类目数组（科目/总分/班排等）
+     * @param {number[][]} seriesList 系列数据（每个考试对应一组数）
+     * @param {string[]} seriesNames 系列名称（考试列表）
+     * @param {('score'|'rank')[]} categoryTypes 每个类目的类型（成绩或排名）
+     * @param {string[]} colors 颜色盘
+     * @param {string} containerId 目标容器ID
+     * @param {?number} tickStep 成绩刻度步长（可选）
+     * @param {?number[]} rankTotals 各考试学生总数，用于排名柱高度缩放
+     */
+    const COLOR_PALETTE = ['#2563eb', '#f59e0b', '#16a085', '#c0392b', '#8e44ad', '#2ecc71', '#e67e22', '#1abc9c'];
+    function drawGroupedBarChart(titleText, categories, seriesList, seriesNames, categoryTypes, colors = COLOR_PALETTE, containerId = 'chartScores', tickStep = null, rankTotals = null) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 420;
+      let margin = { top: 90, right: 20, bottom: 60, left: 50 };
+      if (containerId === 'chartSummary') margin.right = 30;
+      const iw = Math.max(100, width - margin.left - margin.right);
+      const ih = Math.max(100, height - margin.top - margin.bottom);
+      const isScoreIdx = categoryTypes.map(t => t === 'score');
+      const isRankIdx = categoryTypes.map(t => t === 'rank');
+      const isScoresContainer = containerId === 'chartScores';
+
+      function fullMarkOf(cat) {
+        if (cat === '语文' || cat === '数学' || cat === '英语') return 150;
+        if (cat === KEY_TOTAL) return 1050;
+        if (cat === KEY_SCI_TOTAL) return 750;
+        return 100;
+      }
+      const fullMarks = categories.map((c, i) => isScoreIdx[i] ? fullMarkOf(c) : 0);
+      const globalMaxFull = Math.max(1, ...fullMarks);
+      const maxRank = Math.max(1, ...seriesList.flatMap(arr => arr.filter((_, i) => isRankIdx[i])).map(v => Number.isFinite(v) ? v : 0));
+      const step = iw / categories.length;
+      const groupW = Math.max(24, step * 0.8);
+      const n = seriesList.length;
+      const innerGap = Math.min(6, Math.max(2, Math.floor(groupW * 0.06)));
+      const barW = Math.max(10, Math.floor((groupW - innerGap * (n - 1)) / n));
+
+      const svg = document.createElementNS(NS_SVG, 'svg');
+      svg.setAttribute('width', String(width));
+      svg.setAttribute('height', String(height));
+
+      // 标题
+      const title = document.createElementNS(NS_SVG, 'text');
+      title.setAttribute('x', String(width / 2));
+      title.setAttribute('y', String(margin.top / 2));
+      title.setAttribute('text-anchor', 'middle');
+      title.setAttribute('font-size', '14');
+      title.setAttribute('fill', '#222');
+      title.textContent = titleText;
+      svg.appendChild(title);
+
+      // 坐标轴（左侧Y：分数；X：类目）
+      const axis = document.createElementNS(NS_SVG, 'g');
+      const xLine = document.createElementNS(NS_SVG, 'line');
+      xLine.setAttribute('x1', String(margin.left));
+      xLine.setAttribute('y1', String(height - margin.bottom));
+      xLine.setAttribute('x2', String(width - margin.right));
+      xLine.setAttribute('y2', String(height - margin.bottom));
+      xLine.setAttribute('stroke', '#bbb');
+      axis.appendChild(xLine);
+
+      const yLine = document.createElementNS(NS_SVG, 'line');
+      yLine.setAttribute('x1', String(margin.left));
+      yLine.setAttribute('y1', String(margin.top));
+      yLine.setAttribute('x2', String(margin.left));
+      yLine.setAttribute('y2', String(height - margin.bottom));
+      yLine.setAttribute('stroke', '#bbb');
+      axis.appendChild(yLine);
+      svg.appendChild(axis);
+
+      // 刻度：左侧成绩刻度；在“总分&排名”图右侧额外绘制整数名次刻度
+      const ticks = document.createElementNS(NS_SVG, 'g');
+      const isSummary = containerId === 'chartSummary';
+      // 左侧成绩刻度
+      {
+        const max = globalMaxFull;
+        const stepApprox = isSummary ? (tickStep ?? 150) : (tickStep ?? Math.max(10, Math.round((max / 5) / 10) * 10));
+        for (let v = 0; v <= max; v += stepApprox) {
+          const yTick = Math.round(height - margin.bottom - (v / max) * ih);
+          const line = document.createElementNS(NS_SVG, 'line');
+          line.setAttribute('x1', String(margin.left));
+          line.setAttribute('y1', String(yTick));
+          line.setAttribute('x2', String(width - margin.right));
+          line.setAttribute('y2', String(yTick));
+          line.setAttribute('stroke', '#eeeeee');
+          ticks.appendChild(line);
+          const label = document.createElementNS(NS_SVG, 'text');
+          label.setAttribute('x', String(margin.left - 10));
+          label.setAttribute('y', String(yTick + 4));
+          label.setAttribute('text-anchor', 'end');
+          label.setAttribute('font-size', '10');
+          label.setAttribute('fill', '#888');
+          label.textContent = String(v);
+          ticks.appendChild(label);
+        }
+      }
+
+      // 右侧排名刻度（仅“总分&排名”图且包含排名类目时绘制）
+      if (isSummary && isRankIdx.some(Boolean)) {
+        const maxR = rankTotals && rankTotals.length ? Math.max(...rankTotals) : maxRank;
+        const stepR = 5;
+        for (let v = 0; v <= maxR; v += stepR) {
+          const yTick = Math.round(height - margin.bottom - (v / maxR) * ih);
+          const labelR = document.createElementNS(NS_SVG, 'text');
+          labelR.setAttribute('x', String(width - margin.right + 10));
+          labelR.setAttribute('y', String(yTick + 4));
+          labelR.setAttribute('text-anchor', 'start');
+          labelR.setAttribute('font-size', '10');
+          labelR.setAttribute('fill', '#888');
+          labelR.textContent = String(v);
+          ticks.appendChild(labelR);
+        }
+      }
+      svg.appendChild(ticks);
+
+      // 柱形与数值标签绘制
+      const bars = document.createElementNS(NS_SVG, 'g');
+      for (let ci = 0; ci < categories.length; ci++) {
+        const groupX = Math.round(margin.left + ci * step + (step - groupW) / 2);
+        for (let si = 0; si < n; si++) {
+          const raw = Number.isFinite(seriesList[si][ci]) ? seriesList[si][ci] : 0;
+          const isScore = categoryTypes[ci] === 'score';
+          const x = groupX + si * (barW + innerGap);
+          const barGroup = document.createElementNS(NS_SVG, 'g');
+          if (isScore) {
+            const fm = fullMarks[ci];
+            const v = Math.max(0, Math.min(raw, fm));
+            const actualH = Math.round((v / globalMaxFull) * ih);
+            const yActualTop = Math.round(height - margin.bottom - actualH);
+            const rectActual = document.createElementNS(NS_SVG, 'rect');
+            rectActual.setAttribute('x', String(x));
+            rectActual.setAttribute('y', String(yActualTop));
+            rectActual.setAttribute('width', String(barW));
+            rectActual.setAttribute('height', String(actualH));
+            rectActual.setAttribute('fill', colors[si % colors.length]);
+            barGroup.appendChild(rectActual);
+            const remainH = Math.round(((fm - v) / globalMaxFull) * ih);
+            const yRemainTop = Math.round(height - margin.bottom - (actualH + remainH));
+            const rectRemain = document.createElementNS(NS_SVG, 'rect');
+            rectRemain.setAttribute('x', String(x));
+            rectRemain.setAttribute('y', String(yRemainTop));
+            rectRemain.setAttribute('width', String(barW));
+            rectRemain.setAttribute('height', String(remainH));
+            rectRemain.setAttribute('fill', '#e5e7eb');
+            barGroup.appendChild(rectRemain);
+
+            const valText = document.createElementNS(NS_SVG, 'text');
+            valText.setAttribute('x', String(x + barW / 2));
+            valText.setAttribute('y', String(yActualTop - 4));
+            valText.setAttribute('text-anchor', 'middle');
+            valText.setAttribute('font-size', '11');
+            const highlight = (v > fm * SCORE_HIGHLIGHT_RATIO) && (isScoresContainer || (containerId === 'chartSummary' && (categories[ci] === KEY_TOTAL || categories[ci] === KEY_SCI_TOTAL)));
+            valText.setAttribute('fill', highlight ? COLOR_SCORE_HIGHLIGHT : '#333');
+            valText.textContent = String(raw);
+            barGroup.appendChild(valText);
+          } else {
+            const denom = (rankTotals && Number.isFinite(rankTotals[si])) ? rankTotals[si] : maxRank;
+            const barH = Math.round((raw / denom) * ih);
+            const y = Math.round(height - margin.bottom - barH);
+            const rect = document.createElementNS(NS_SVG, 'rect');
+            rect.setAttribute('x', String(x));
+            rect.setAttribute('y', String(y));
+            rect.setAttribute('width', String(barW));
+            rect.setAttribute('height', String(barH));
+            rect.setAttribute('fill', colors[si % colors.length]);
+            barGroup.appendChild(rect);
+
+            const valText = document.createElementNS(NS_SVG, 'text');
+            valText.setAttribute('x', String(x + barW / 2));
+            valText.setAttribute('y', String(y - 4));
+            valText.setAttribute('text-anchor', 'middle');
+            valText.setAttribute('font-size', '11');
+            valText.setAttribute('fill', '#333');
+            valText.textContent = String(raw);
+            barGroup.appendChild(valText);
+          }
+
+          bars.appendChild(barGroup);
+        }
+
+        const catText = document.createElementNS(NS_SVG, 'text');
+        catText.setAttribute('x', String(groupX + groupW / 2));
+        catText.setAttribute('y', String(height - margin.bottom + 16));
+        catText.setAttribute('transform', `rotate(-30 ${groupX + groupW / 2} ${height - margin.bottom + 16})`);
+        catText.setAttribute('text-anchor', 'end');
+        catText.setAttribute('font-size', '11');
+        catText.setAttribute('fill', '#555');
+        catText.textContent = categories[ci];
+        bars.appendChild(catText);
+      }
+      svg.appendChild(bars);
+
+      const legend = document.createElementNS(NS_SVG, 'g');
+      const baseY = (margin.top / 2) + 20;
+      const compact = containerId === 'chartSummary';
+      const perRow = compact ? 4 : Math.max(1, Math.floor((width - margin.left - margin.right) / 140));
+      const itemW = compact ? 90 : 140;
+      const rowH = 20;
+      for (let i = 0; i < seriesNames.length; i++) {
+        const col = i % perRow;
+        const row = Math.floor(i / perRow);
+        const x0 = margin.left + col * itemW;
+        const y0 = baseY + row * rowH;
+        const rect = document.createElementNS(NS_SVG, 'rect');
+        rect.setAttribute('x', String(x0));
+        rect.setAttribute('y', String(y0));
+        rect.setAttribute('width', '14'); rect.setAttribute('height', '14');
+        rect.setAttribute('fill', colors[i % colors.length]);
+        legend.appendChild(rect);
+        const txt = document.createElementNS(NS_SVG, 'text');
+        txt.setAttribute('x', String(x0 + 20));
+        txt.setAttribute('y', String(y0 + 12));
+        txt.setAttribute('font-size', '12'); txt.setAttribute('fill', '#333');
+        txt.textContent = seriesNames[i];
+        legend.appendChild(txt);
+      }
+      svg.appendChild(legend);
+
+      container.appendChild(svg);
+    }
+
+    /**
+     * 图表渲染：
+     * - 左图：各科成绩（分段堆叠：实际得分+满分剩余）
+     * - 右图：总分/理科总分（堆叠）+总分班排/理科班排（按考试人数缩放）
+     */
+    function renderChart() {
+      const name = document.getElementById('nameSelect').value;
+      const exam = document.getElementById('examSelect').value;
+      const statusBar = document.getElementById('statusBar');
+
+      const warnings = [];
+      if (!namesOrder.length || !examsOrder.length) warnings.push('暂无可用数据，请检查数据对象。');
+      const examsForName = byNameExam[name] ? Object.keys(byNameExam[name]) : [];
+      if (examsForName.length === 0) warnings.push('该学生暂无任何考试记录。');
+      const seriesNames = examsForName;
+
+      const categoriesScores = [...SUBJECTS];
+      const categoryTypesScores = categoriesScores.map(() => 'score');
+      const seriesListScores = seriesNames.map(ex => {
+        const rec = byNameExam[name]?.[ex] || {};
+        return categoriesScores.map(k => typeof rec[k] === 'number' ? rec[k] : 0);
+      });
+      const titleScores = `${name} - 所有考试 - 各科成绩`;
+      drawGroupedBarChart(titleScores, categoriesScores, seriesListScores, seriesNames, categoryTypesScores, COLOR_PALETTE, 'chartScores', TICK_SCORE_STEP_SUBJECTS);
+
+      const categoriesSummary = [KEY_TOTAL, KEY_SCI_TOTAL, KEY_TOTAL_CLASS_RANK, KEY_SCI_CLASS_RANK];
+      const categoryTypesSummary = categoriesSummary.map(c => (c === KEY_TOTAL_CLASS_RANK || c === KEY_SCI_CLASS_RANK) ? 'rank' : 'score');
+      const seriesListSummary = seriesNames.map(ex => {
+        const rec = byNameExam[name]?.[ex] || {};
+        return categoriesSummary.map(k => typeof rec[k] === 'number' ? rec[k] : 0);
+      });
+      const titleSummary = `${name} - 所有考试 - 总分&排名`;
+      const rankTotals = seriesNames.map(ex => {
+        const c = records.filter(r => r[KEY_EXAM] === ex).length;
+        return c > 0 ? c : 1;
+      });
+      drawGroupedBarChart(titleSummary, categoriesSummary, seriesListSummary, seriesNames, categoryTypesSummary, COLOR_PALETTE, 'chartSummary', TICK_SCORE_STEP_SUMMARY, rankTotals);
+
+      // 状态提示
+      const tips = [];
+      for (const w of warnings) tips.push(`<span class='warn badge'>${w}</span>`);
+      statusBar.innerHTML = tips.join(' ');
+    }
+
+    /**
+     * 页面初始化：
+     * 1) 预计算总分
+     * 2) 构建索引与顺序
+     * 3) 计算班排
+     * 4) 渲染下拉/表格/图表并挂载事件
+     */
+    function init() {
+      precomputeDataBaseTotals();
+      buildData();
+      computeClassRanks(records);
+      fillSelectOptions();
+      renderTable();
+      renderChart();
+
+      // 事件绑定：选择变化与模式切换
+      document.getElementById('nameSelect').addEventListener('change', () => { renderTable(); renderChart(); });
+      document.getElementById('examSelect').addEventListener('change', () => { renderTable(); renderChart(); });
+
+      // 窗口大小变化自适应
+      window.addEventListener('resize', () => { renderChart(); });
+    }
+
+    // 空数据与异常防御
+    try { init(); } catch (err) {
+      const statusBar = document.getElementById('statusBar');
+      statusBar.innerHTML = `<span class='warn badge'>初始化失败：${err?.message || err}</span>`;
+    }
+  </script>
+</body>
+
+</html>
