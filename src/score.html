@@ -44,6 +44,7 @@
       box-shadow: 0 6px 24px rgba(0, 0, 0, .06);
       padding: 16px;
       margin-bottom: 16px;
+      min-width: 1000px;
     }
 
     .header {
@@ -189,25 +190,25 @@
         height: 320px;
       }
     }
-  </style>
-</head>
+    </style>
+  </head>
 
-<body>
-  <div class="container">
-    <div class="card">
-      <div class="header">
-        <div class="field">
-          <label for="nameSelect">学生：</label>
-          <select id="nameSelect" style="width: 120px;"></select>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="header">
+          <div class="field">
+            <label for="nameSelect">学生：</label>
+            <select id="nameSelect" style="width: 120px;"></select>
+          </div>
+          <div class="field">
+            <label for="examSelect">考试：</label>
+            <select id="examSelect" style="width: 120px;"></select>
+            <button id="rotateBtn" class="action-btn">旋转屏幕</button>
+          </div>
         </div>
-        <div class="field">
-          <label for="examSelect">考试：</label>
-          <select id="examSelect" style="width: 120px;"></select>
-        </div>
-
+        <div class="status" id="statusBar"></div>
       </div>
-      <div class="status" id="statusBar"></div>
-    </div>
 
     <div class="card charts-row">
       <div class="chart-box chart-scores">
@@ -228,7 +229,10 @@
     </div>
   </div>
 
-  <script>
+    <script>
+      const styleExtra = document.createElement('style');
+      styleExtra.textContent = `button.action-btn{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}button.action-btn:active{transform:scale(.98)}html.landscape-mode body{position:fixed;top:0;left:0;width:100vh;height:100vw;transform:rotate(90deg) translateY(-100vh);transform-origin:top left;overflow:auto}`;
+      document.head.appendChild(styleExtra);
     /**
      * 数据源：预置的成绩JSON，字段包含“考试”与各科分数，以及“总分年排”。
      * 注意：页面初始化时会计算并写入“总分/理科总分”。
@@ -820,6 +824,33 @@
       // 事件绑定：选择变化与模式切换
       document.getElementById('nameSelect').addEventListener('change', () => { renderTable(); renderChart(); });
       document.getElementById('examSelect').addEventListener('change', () => { renderTable(); renderChart(); });
+      document.getElementById('rotateBtn').addEventListener('click', async () => {
+        const htmlEl = document.documentElement;
+        const toLandscape = !htmlEl.classList.contains('landscape-mode');
+        const btn = document.getElementById('rotateBtn');
+        btn.disabled = true;
+        try {
+          if (screen.orientation && typeof screen.orientation.lock === 'function') {
+            try {
+              if (toLandscape && !document.fullscreenElement) {
+                await document.documentElement.requestFullscreen();
+              }
+              await screen.orientation.lock(toLandscape ? 'landscape' : 'portrait');
+              if (!toLandscape && document.fullscreenElement) {
+                try { await document.exitFullscreen(); } catch (_) {}
+              }
+            } catch (_) {
+              htmlEl.classList.toggle('landscape-mode', toLandscape);
+            }
+          } else {
+            htmlEl.classList.toggle('landscape-mode', toLandscape);
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = htmlEl.classList.contains('landscape-mode') ? '切回竖屏' : '旋转屏幕';
+          renderChart();
+        }
+      });
 
       // 窗口大小变化自适应
       window.addEventListener('resize', () => { renderChart(); });
