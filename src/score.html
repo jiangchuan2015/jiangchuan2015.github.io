@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>成绩展示与可视化</title>
+  <title>成绩展示</title>
 
   <style>
     /* 页面基础布局与主题色 */
@@ -231,7 +231,7 @@
 
     <script>
       const styleExtra = document.createElement('style');
-      styleExtra.textContent = `button.action-btn{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}button.action-btn:active{transform:scale(.98)}html.landscape-mode body{position:fixed;top:0;left:0;width:100vh;height:100vw;transform:rotate(90deg) translateY(-100vh);transform-origin:top left;overflow:auto}`;
+      styleExtra.textContent = `button.action-btn{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}button.action-btn:active{transform:scale(.98)}html.landscape-mode body{position:relative;top:0;left:0;width:100vh;min-height:100vw;transform:rotate(90deg) translateY(-100vh);transform-origin:top left;overflow:auto}`;
       document.head.appendChild(styleExtra);
     /**
      * 数据源：预置的成绩JSON，字段包含“考试”与各科分数，以及“总分年排”。
@@ -824,30 +824,15 @@
       // 事件绑定：选择变化与模式切换
       document.getElementById('nameSelect').addEventListener('change', () => { renderTable(); renderChart(); });
       document.getElementById('examSelect').addEventListener('change', () => { renderTable(); renderChart(); });
-      document.getElementById('rotateBtn').addEventListener('click', async () => {
+      document.getElementById('rotateBtn').addEventListener('click', () => {
         const htmlEl = document.documentElement;
         const toLandscape = !htmlEl.classList.contains('landscape-mode');
         const btn = document.getElementById('rotateBtn');
         btn.disabled = true;
         try {
-          if (screen.orientation && typeof screen.orientation.lock === 'function') {
-            try {
-              if (toLandscape && !document.fullscreenElement) {
-                await document.documentElement.requestFullscreen();
-              }
-              await screen.orientation.lock(toLandscape ? 'landscape' : 'portrait');
-              if (!toLandscape && document.fullscreenElement) {
-                try { await document.exitFullscreen(); } catch (_) {}
-              }
-            } catch (_) {
-              htmlEl.classList.toggle('landscape-mode', toLandscape);
-            }
-          } else {
-            htmlEl.classList.toggle('landscape-mode', toLandscape);
-          }
+          htmlEl.classList.toggle('landscape-mode', toLandscape);
         } finally {
           btn.disabled = false;
-          btn.textContent = htmlEl.classList.contains('landscape-mode') ? '切回竖屏' : '旋转屏幕';
           renderChart();
         }
       });
