@@ -437,39 +437,66 @@
       const w = container.clientWidth,
         h = container.clientHeight;
       if (w < 100) return;
-      const margin = { t: 70, r: 40, b: 50, l: 50 },
+
+      const margin = { t: 80, r: 40, b: 50, l: 50 },
         iw = w - margin.l - margin.r,
         ih = h - margin.t - margin.b;
-      let html = `<svg width="${w}" height="${h}" xmlns="${NS_SVG}"><text x="${w / 2}" y="35" text-anchor="middle" font-size="16" font-weight="bold">${title}</text>`;
+
+      const scoreIndices = cats.map((_, i) => i).filter(i => types[i] === "score");
+      const yMax = scoreIndices.length
+        ? Math.max(...scoreIndices.map(i => FULL_MARKS[cats[i]] || 100))
+        : 1000;
+
+      let html = `<svg width="${w}" height="${h}" xmlns="${NS_SVG}">`;
+      html += `<text x="${w / 2}" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">${title}</text>`;
+
+      seriesNames.forEach((sn, i) => {
+        const lx = margin.l + i * 90;
+        const ly = 50;
+        html += `<rect x="${lx}" y="${ly}" width="12" height="12" fill="${COLOR_PALETTE[i % 4]}" rx="2" />`;
+        html += `<text x="${lx + 18}" y="${ly + 10}" font-size="12" fill="#666">${sn}</text>`;
+      });
+
+      for (let v = 0; v <= yMax; v += tickStep) {
+        const yLine = Math.round(h - margin.b - (v / yMax) * ih);
+        html += `<line x1="${margin.l}" y1="${yLine}" x2="${w - margin.r}" y2="${yLine}" stroke="${v === 0 ? "#bbb" : "#eee"}" stroke-width="1" />`;
+        html += `<text x="${margin.l - 10}" y="${yLine + 4}" text-anchor="end" font-size="11" fill="#888">${v}</text>`;
+      }
+
+      html += `<line x1="${margin.l}" y1="${margin.t}" x2="${margin.l}" y2="${h - margin.b}" stroke="#bbb" />`;
 
       const groupStep = iw / cats.length;
       const groupW = groupStep * 0.8;
       const n = series.length;
-      const barW = groupW / n;
+      const innerGap = 2;
+      const barW = (groupW - (n - 1) * innerGap) / n;
 
       cats.forEach((cat, i) => {
         const isScore = types[i] === "score";
-        const fm = FULL_MARKS[cat] || 1000;
-        const maxVal = isScore
-          ? fm
-          : Math.max(...records.map((r) => r[KEY_TOTAL_CLASS_RANK]));
+        const fm = FULL_MARKS[cat] || 100;
+        const groupX = margin.l + i * groupStep + (groupStep - groupW) / 2;
 
-        // 刻度线
-        html += `<line x1="${margin.l}" y1="${margin.t}" x2="${margin.l}" y2="${h - margin.b}" stroke="#ddd" />`;
-        html += `<line x1="${margin.l}" y1="${h - margin.b}" x2="${w - margin.r}" y2="${h - margin.b}" stroke="#ddd" />`;
+        if (isScore) {
+          const bgH = (fm / yMax) * ih;
+          html += `<rect x="${groupX}" y="${h - margin.b - bgH}" width="${groupW}" height="${bgH}" fill="#f3f4f6" rx="2" />`;
+        }
 
         series.forEach((s, si) => {
           const val = s[i] || 0;
-          const barH = (val / maxVal) * ih;
-          const x =
-            margin.l + i * groupStep + (groupStep - groupW) / 2 + si * barW;
+          let barH;
+          if (isScore) {
+            barH = (val / yMax) * ih;
+          } else {
+            const maxRank = Math.max(...records.map((r) => r[KEY_TOTAL_CLASS_RANK]), 1);
+            barH = (val / maxRank) * ih;
+          }
+          const x = groupX + si * (barW + innerGap);
           const y = h - margin.b - barH;
-
-          html += `<rect x="${x}" y="${y}" width="${barW - 2}" height="${barH}" fill="${COLOR_PALETTE[si % 4]}" rx="2" />`;
+          html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="${COLOR_PALETTE[si % 4]}" rx="1" />`;
           const highlight = isScore && val > fm * SCORE_HIGHLIGHT_RATIO;
-          html += `<text x="${x + barW / 2}" y="${y - 5}" text-anchor="middle" font-size="11" fill="${highlight ? COLOR_SCORE_HIGHLIGHT : "#333"}">${val}</text>`;
+          html += `<text x="${x + barW / 2}" y="${y - 5}" text-anchor="middle" font-size="11" font-weight="${highlight ? "bold" : "normal"}" fill="${highlight ? COLOR_SCORE_HIGHLIGHT : "#333"}">${val}</text>`;
         });
-        html += `<text x="${margin.l + i * groupStep + groupStep / 2}" y="${h - 15}" text-anchor="middle" font-size="12" fill="#666">${cat}</text>`;
+        html += `<text x="${margin.l + i * groupStep + groupStep / 2}" y="${h - 15}" text-anchor="middle" font-size="13" fill="#444">${cat}</text>`;
       });
       html += "</svg>";
       container.innerHTML = html;
