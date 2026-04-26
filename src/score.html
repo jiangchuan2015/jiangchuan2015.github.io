@@ -453,7 +453,7 @@
         SUBJECTS.map(() => "score"),
         TICK_SCORE_STEP_SUBJECTS,
       );
-      const summaryCats = [KEY_TOTAL, KEY_TOTAL_CLASS_RANK];
+      const summaryCats = [KEY_TOTAL, KEY_TOTAL_CLASS_RANK, KEY_TOTAL_YEAR_RANK];
       drawBarChart(
         containerSummary,
         `${name} - 总分排名`,
@@ -461,9 +461,10 @@
         examsForName.map((ex) => [
           byNameExam[name][ex][KEY_TOTAL],
           byNameExam[name][ex][KEY_TOTAL_CLASS_RANK],
+          byNameExam[name][ex][KEY_TOTAL_YEAR_RANK],
         ]),
         examsForName,
-        ["score", "rank"],
+        ["score", "rank", "rank"],
         TICK_SCORE_STEP_SUMMARY,
       );
 
@@ -535,8 +536,8 @@
           if (isScore) {
             barH = (val / yMax) * ih;
           } else {
-            const maxRank = Math.max(...records.map((r) => r[KEY_TOTAL_CLASS_RANK]), 1);
-            barH = (val / maxRank) * ih;
+            const maxRankForCat = Math.max(...records.map(r => r[cat] || 0), 1);
+            barH = (val / maxRankForCat) * ih;
           }
           const x = groupX + si * (barW + innerGap);
           const y = h - margin.b - barH;
