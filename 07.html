@@ -944,6 +944,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       margin-top: 4px;
     }
 
+    .map-day-card .distance {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
     .day-marker {
       width: 34px;
       height: 34px;
@@ -1016,6 +1021,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
 
     .day li, section li { margin: 3px 0; }
+
+    .day-extra {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .day-extra div {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f9fbfd;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .day-extra strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--green);
+    }
 
     table {
       width: 100%;
@@ -1112,6 +1139,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       .map-tools { grid-template-columns: 1fr; gap: 8px; }
       .map-day-card { min-height: 0; padding: 9px 10px; }
       .day { grid-template-columns: 1fr; }
+      .day-extra { grid-template-columns: 1fr; }
       .day-date {
         border-right: 0;
         border-bottom: 1px solid var(--line);
@@ -1207,7 +1235,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
         <div class="card">
           <strong>返程</strong>
-          3 人建议 7 月 26 日从库尔勒梨城机场返程；另 1 位朋友和车辆留在新疆。若独库或巴音布鲁克路况不好，直接取消该段，优先保证安全和返程。
+          3 人建议 7 月 26 日从库尔勒梨城机场返程；二姐和车辆留在新疆。若独库或巴音布鲁克路况不好，直接取消该段，优先保证安全和返程。
         </div>
       </div>
       <div class="notice" style="margin-top:16px;">
@@ -1221,10 +1249,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="people-grid">
 
         <div class="card">
+          <strong>小姜</strong>
+          <p>建议承担山路、夜间前置路段、进出景区、城市复杂路段等关键驾驶任务。</p>
+          <span class="tag">复杂路段主力</span>
+          <span class="tag">路况判断</span>
+        </div>
+        <div class="card">
           <strong>汤姐</strong>
-          <p>建议作为主要轮换力量，承担高速、城市道路和状态良好时的普通山路。</p>
+          <p>驾驶技术熟练，建议参与常规路段轮换，协助分担高速和城市道路。</p>
           <span class="tag">稳定轮换</span>
-          <span class="tag">高速主力</span>
+          <span class="tag">路线协作</span>
         </div>
         <div class="card">
           <strong>二姐</strong>
@@ -1237,12 +1271,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <p>不会驾驶。负责导航复核、订房订票、补给清点、拍照记录和提醒休息。</p>
           <span class="tag">导航协助</span>
           <span class="tag">后勤统筹</span>
-        </div>        
-        <div class="card">
-          <strong>小姜</strong>
-          <p>建议承担山路、夜间前置路段、进出景区、城市复杂路段等关键驾驶任务。</p>
-          <span class="tag">复杂路段主力</span>
-          <span class="tag">路况判断</span>
         </div>
         
       </div>
@@ -1251,7 +1279,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <strong>驾驶分工建议</strong>
           <ul>
             <li>高速白天：小姜和汤姐轮换，每 2-2.5 小时休息一次；二姐可在平直高速短段轮换。</li>
-            <li>山区、景区、雨雾、夜间、临崖路段：只建议小姜或汤姐驾驶。</li>
+            <li>汤姐优先安排白天、路况稳定、服务区密集的高速/城市道路；不安排夜路、雨雾山路和长时间连续山路。</li>
+            <li>山区、景区、雨雾、夜间、临崖路段：以小姜为主；如确需轮换，只在白天且路况清晰的短段再安排汤姐。</li>
             <li>小王负责导航二次确认：路线、服务区、酒店停车、景区预约、天气和独库公告。</li>
             <li>任何人出现困、烦、头疼、注意力下降，立即进服务区或就近住宿，不继续硬开。</li>
           </ul>
@@ -1341,8 +1370,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <ul>
               <li>目的：轻轻往前挪一段，不把第一天做成熬夜赶路。</li>
               <li>轻松目标住广元利州区，状态好再到陇南武都区；选高速口 10-15 分钟内的酒店。</li>
-              <li>晚间高速建议小姜为主、汤姐短时轮换；二姐不安排夜路。23:30 后不建议继续硬开山区路段。</li>
+              <li>晚间高速建议小姜为主，汤姐不安排夜间轮换；二姐不安排夜路。23:30 后不建议继续硬开山区路段。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>不安排正式游玩；若到广元早，可在嘉陵江边或老城短走 20-30 分钟。</div>
+              <div><strong>美食</strong>广元凉面、核桃饼、酸菜豆花；陇南可吃浆水面、洋芋搅团、陇南小炒。</div>
+              <div><strong>住宿建议</strong>优先广元利州区高速口、万达/高铁站周边；可搜汉庭、如家、7天优品、城市便捷、锦江之星或本地商务酒店，目标 200-300/间夜，重点看停车和 24 小时前台。</div>
+            </div>
           </div>
         </article>
 
@@ -1357,6 +1391,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <li>晚上住兰州黄河风情线或西站附近，吃牛肉面、手抓羊肉，早点休息。</li>
               <li>今天开始按“舒适优先”执行，不为了多赶 200 km 牺牲第二天状态。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>麦积山石窟可选；兰州到得早可看黄河铁桥、中山桥夜景、黄河风情线。</div>
+              <div><strong>美食</strong>牛肉面、手抓羊肉、甜醅子、灰豆子、酿皮；晚餐可选正宁路/大众巷附近。</div>
+              <div><strong>住宿建议</strong>兰州建议西站、城关区或黄河风情线外围；可搜汉庭、如家、7天优品、锦江之星、城市便捷、维也纳低价房型，尽量控制在 300/间夜内，确认停车场入口是否好进。</div>
+            </div>
           </div>
         </article>
 
@@ -1371,6 +1410,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <li>如果上午出发晚，就住张掖；如果状态好，推进到嘉峪关/酒泉，为次日进疆减压。</li>
               <li>今天主要是高速日，服务区多下车活动，避免久坐疲劳。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>武威雷台汉墓、张掖大佛寺、嘉峪关关城外观；明确不安排七彩丹霞。</div>
+              <div><strong>美食</strong>兰州出发可补牛肉面；张掖吃搓鱼子、炒炮仗、牛肉小饭；嘉峪关吃烤肉、羊肉粉汤。</div>
+              <div><strong>住宿建议</strong>住嘉峪关市区、关城景区外围或酒泉肃州区；可搜汉庭、如家、7天优品、锦江之星、格林豪泰、维也纳低价房型，选地面停车方便的。</div>
+            </div>
           </div>
         </article>
 
@@ -1385,6 +1429,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <li>到哈密后只安排晚餐和休整，推荐烤肉、抓饭、哈密瓜。</li>
               <li>晚上检查轮胎、冷却液、玻璃水，东疆高温对车辆状态要求更高。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>不安排重景点；如到哈密早，可短逛回王府外观或哈密博物馆，别顶着正午暴晒。</div>
+              <div><strong>美食</strong>哈密瓜、羊肉焖饼、抓饭、烤包子、红柳烤肉；晚餐以补水和清淡搭配为主。</div>
+              <div><strong>住宿建议</strong>住哈密市中心、火车站或友好商圈；可搜汉庭、如家、7天优品、城市便捷、格林豪泰、维也纳低价房型或本地商务酒店，优先空调稳定和停车充足。</div>
+            </div>
           </div>
         </article>
 
@@ -1399,6 +1448,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <li>正午前后尽量在车内或室内，避免暴晒消耗体力。</li>
               <li>晚上住乌鲁木齐或昌吉，吃新疆第一顿正式大餐，第二天再去赛里木湖。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>吐鲁番四选一：坎儿井、葡萄沟、交河故城、火焰山外观；乌鲁木齐不额外加景点。</div>
+              <div><strong>美食</strong>吐鲁番葡萄、烤包子、拌面；晚餐可吃大盘鸡、椒麻鸡、架子肉、酸奶粽子。</div>
+              <div><strong>住宿建议</strong>更轻松建议住昌吉，停车和次日出城通常顺；可搜汉庭、如家、7天优品、城市便捷、锦江之星、维也纳低价房型，乌鲁木齐外环同档也可。</div>
+            </div>
           </div>
         </article>
 
@@ -1411,8 +1465,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <ul>
               <li>赛里木湖是必去重点，建议东门进、南门出，留足湖边停靠时间。</li>
               <li>重点停靠：月亮湾、亲水滩、松树头、克勒涌珠；下午到傍晚光线最好。</li>
-              <li>环湖和果子沟段建议小姜或汤姐驾驶；如果环湖结束较晚，住清水河，如果还不累，再去伊宁。</li>
+              <li>果子沟和环湖复杂路段建议小姜负责；汤姐只安排白天高速或路况稳定段轮换。如果环湖结束较晚，住清水河，如果还不累，再去伊宁。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>赛里木湖环湖、果子沟大桥观景点；状态好再到伊宁六星街/喀赞其短逛。</div>
+              <div><strong>美食</strong>清水河/伊宁可吃手抓饭、烤肉、烤包子、冰淇淋、卡瓦斯、伊犁奶茶。</div>
+              <div><strong>住宿建议</strong>晚了住清水河镇，少开夜路；状态好住伊宁六星街或喀赞其外围。优先普通连锁、本地商务酒店或干净民宿，城市段尽量 300/间夜内。</div>
+            </div>
           </div>
         </article>
 
@@ -1427,6 +1486,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <li>优先河谷草原或空中草原其中一条线，不要第一天就全刷完。</li>
               <li>晚上住那拉提镇，确认停车、热水、空调，早点休息。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>伊宁六星街、喀赞其可短逛；下午那拉提先走河谷草原或空中草原半程。</div>
+              <div><strong>美食</strong>伊宁早餐可吃包尔萨克、奶茶、馕、抓饭；那拉提晚餐吃土火锅、羊肉汤、烤肉。</div>
+              <div><strong>住宿建议</strong>那拉提镇游客中心 5-15 分钟车程内；优先本地干净民宿、客栈、普通宾馆或家庭房，景区旺季可放宽到 400-700/间夜，确认停车、热水和空调。</div>
+            </div>
           </div>
         </article>
 
@@ -1441,6 +1505,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <li>上午走空中草原，下午补河谷草原或盘龙谷西段；没有自驾名额就坐区间车。</li>
               <li>晚上开会式确认第二天：如果天气、路况、大家状态都好，再走巴音布鲁克；否则直接走替代线。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>空中草原、河谷草原、盘龙谷西段；天气好把拍照和散步时间留足。</div>
+              <div><strong>美食</strong>那拉提镇可吃羊肉串、手抓肉、土火锅、椒麻鸡、奶茶；别吃太撑，第二天可能走山路。</div>
+              <div><strong>住宿建议</strong>继续住那拉提镇同一家，少折腾行李；优先有早餐、停车、洗衣或烘干条件的酒店/民宿。</div>
+            </div>
           </div>
         </article>
 
@@ -1453,8 +1522,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <ul>
               <li>方案 A：天气晴、路况好、大家状态好，就从那拉提走独库中段到巴音布鲁克，看九曲十八弯，住巴音布鲁克或和静。</li>
               <li>方案 B：只在那拉提附近体验一小段独库公路后折返，不去巴音布鲁克，改走更稳路线到和静或库尔勒。</li>
-              <li>今天只建议小姜或汤姐驾驶；二姐不承担独库和巴音布鲁克方向路段。第一优先级是安全，不用为了打卡硬上山路。</li>
+              <li>今天独库和巴音布鲁克方向以小姜为主；汤姐只在白天、路况稳定的平缓短段轮换，二姐不承担该方向路段。第一优先级是安全，不用为了打卡硬上山路。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>方案 A 看独库中段、巴音布鲁克草原、九曲十八弯；方案 B 只体验独库短段后转和静/库尔勒。</div>
+              <div><strong>美食</strong>巴音布鲁克可吃牦牛肉、羊肉汤、奶茶；和静/库尔勒可吃拌面、烤肉、抓饭。</div>
+              <div><strong>住宿建议</strong>路况好可住巴音布鲁克镇或和静；想稳妥就住和静/库尔勒。和静/库尔勒优先普通连锁或本地商务酒店，尽量 300/间夜内；巴音布鲁克旺季可放宽。</div>
+            </div>
           </div>
         </article>
 
@@ -1462,13 +1536,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="day-date"><strong>D9</strong><span>7 月 26 日 周日</span></div>
           <div>
             <p class="day-title">和静 / 巴音布鲁克 → 库尔勒梨城机场返程</p>
-            <p class="meta">3 人飞回成都｜1 位朋友和车辆留在新疆｜不安排库尔勒游玩</p>
+            <p class="meta">3 人飞回成都｜二姐和车辆留在新疆｜不安排库尔勒游玩</p>
             <div class="weather-note">天气：库尔勒晴热干燥为主，约 24-38°C；上午转场，下午避开暴晒并预留送机时间。</div>
             <ul>
-              <li>如果前一晚住和静，上午轻松到库尔勒；如果前一晚住巴音布鲁克，需要更早出发，建议小姜或汤姐负责这段。</li>
+              <li>如果前一晚住和静，上午轻松到库尔勒；如果前一晚住巴音布鲁克，需要更早出发，建议小姜负责山路和复杂路段，汤姐仅在白天好路况短段轮换。</li>
               <li>库尔勒只作为机场点，不安排博斯腾湖、铁门关等额外景点。</li>
               <li>建议选 18:00 以后从库尔勒飞成都的航班，给前一天独库/巴音布鲁克的不确定性留余量。</li>
             </ul>
+            <div class="day-extra">
+              <div><strong>可看景点</strong>不安排正式游玩；时间宽裕只在孔雀河边短走，避免误机。</div>
+              <div><strong>美食</strong>库尔勒香梨、烤肉、抓饭、拌面、椒麻鸡；午餐别太油，方便赶飞机。</div>
+              <div><strong>住宿建议</strong>若 7/25 提前到库尔勒，住孔雀河、机场路或市中心；可搜汉庭、如家、7天优品、城市便捷、锦江之星、维也纳低价房型，优先离机场 30 分钟内。</div>
+            </div>
           </div>
         </article>
       </div>
@@ -1476,7 +1555,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <section id="airport">
       <h2>返程机场建议</h2>
-      <p class="lead">这版首选库尔勒梨城机场。它不是游玩目标，只是最适合“3 人返程、1 位朋友和车留新疆”的收尾点。</p>
+      <p class="lead">这版首选库尔勒梨城机场。它不是游玩目标，只是最适合“3 人返程、二姐和车辆留新疆”的收尾点。</p>
       <table>
         <thead>
           <tr><th>机场</th><th>适合度</th><th>从路线上的额外成本</th><th>建议</th></tr>
@@ -1485,7 +1564,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <tr><td>库尔勒梨城机场 KRL</td><td>首选</td><td>从和静或巴音布鲁克方向收尾最顺</td><td>建议选 7 月 26 日 18:00 以后飞成都的航班，给前一天路况留余量。</td></tr>
           <tr><td>独库南段方向</td><td>不作为主方案</td><td>山路强度更高，对经验和天气要求更高</td><td>你们山路经验少，不建议为了多打卡继续南下。</td></tr>
           <tr><td>乌鲁木齐地窝堡机场 URC</td><td>兜底</td><td>若独库或伊犁天气很差，可从那拉提/伊宁北撤</td><td>航班最多，但会放弃后半段独库体验，作为坏天气保底。</td></tr>
-          <tr><td>伊宁机场 YIN</td><td>提前结束备选</td><td>适合那拉提前后临时缩短行程</td><td>如果大家连续疲劳，可从伊宁返程，1 位朋友和车继续去库尔勒。</td></tr>
+          <tr><td>伊宁机场 YIN</td><td>提前结束备选</td><td>适合那拉提前后临时缩短行程</td><td>如果大家连续疲劳，可从伊宁返程，二姐和车辆继续去库尔勒。</td></tr>
         </tbody>
       </table>
       <div class="success" style="margin-top:16px;">
@@ -1505,24 +1584,24 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <tbody>
               <tr><td>油费</td><td>约 4,450 km，8.5-9.5 L/100 km，油价按 7.8-8.3 元/L</td><td class="num">￥3,000-3,600</td></tr>
               <tr><td>高速 / 停车</td><td>成都至新疆主线高速、景区停车、城市停车</td><td class="num">￥1,700-2,400</td></tr>
-              <tr><td>住宿</td><td>9 晚 × 2 间；城市 300-500/间，景区镇 550-1,000/间</td><td class="num">￥8,800-14,000</td></tr>
+              <tr><td>住宿</td><td>9 晚 × 2 间；城市尽量 200-300/间，景区镇旺季 400-700/间</td><td class="num">￥5,200-8,800</td></tr>
               <tr><td>餐饮</td><td>4 人 × 9.5 天 × 120-180 元/人/天</td><td class="num">￥4,600-6,800</td></tr>
               <tr><td>景区门票 / 交通</td><td>麦积山可选、吐鲁番轻游、赛里木湖、那拉提、巴音布鲁克可选</td><td class="num">￥2,600-4,600</td></tr>
               <tr><td>返程机票</td><td>库尔勒 KRL → 成都 TFU/CTU，3 人，按 1,200-2,300 元/人</td><td class="num">￥3,600-6,900</td></tr>
               <tr><td>补给 / 保险 / 杂费</td><td>水、零食、防晒、氧气瓶、旅行险、洗车等</td><td class="num">￥1,300-2,400</td></tr>
-              <tr><th>基础合计</th><th>含 3 人返程机票，不含车辆后续留疆费用</th><th class="num">￥25,600-40,700</th></tr>
-              <tr><th>3 名返程人员人均</th><th>公共费用 4 人均摊 + 各自返程机票</th><th class="num">约 ￥6,800-10,800/人</th></tr>
-              <tr><th>留疆人员参考</th><th>只分摊公共费用，不含后续在新疆继续旅行</th><th class="num">约 ￥5,500-8,500/人</th></tr>
+              <tr><th>基础合计</th><th>含 3 人返程机票，不含车辆后续留疆费用</th><th class="num">￥22,000-35,500</th></tr>
+              <tr><th>3 名返程人员人均</th><th>公共费用 4 人均摊 + 各自返程机票</th><th class="num">约 ￥5,800-9,500/人</th></tr>
+              <tr><th>留疆人员参考</th><th>只分摊公共费用，不含后续在新疆继续旅行</th><th class="num">约 ￥4,600-7,200/人</th></tr>
             </tbody>
           </table>
           <div class="mobile-card-list">
             <div class="mobile-row-card"><strong>油费｜￥3,000-3,600</strong><p>约 4,450 km，按 8.5-9.5 L/100 km 估算。</p></div>
             <div class="mobile-row-card"><strong>高速 / 停车｜￥1,700-2,400</strong><p>含主线高速、景区停车、城市停车。</p></div>
-            <div class="mobile-row-card"><strong>住宿｜￥8,800-14,000</strong><p>9 晚 × 2 间；景区镇价格波动较大。</p></div>
+            <div class="mobile-row-card"><strong>住宿｜￥5,200-8,800</strong><p>9 晚 × 2 间；城市尽量 300/间内，景区镇旺季单独放宽。</p></div>
             <div class="mobile-row-card"><strong>餐饮｜￥4,600-6,800</strong><p>按 4 人 × 9.5 天 × 120-180 元/人/天。</p></div>
             <div class="mobile-row-card"><strong>景区门票 / 交通｜￥2,600-4,600</strong><p>麦积山可选、吐鲁番轻游、赛里木湖、那拉提、巴音布鲁克可选。</p></div>
             <div class="mobile-row-card"><strong>返程机票｜￥3,600-6,900</strong><p>库尔勒 KRL → 成都，3 人，按 1,200-2,300 元/人。</p></div>
-            <div class="mobile-row-card"><strong>基础合计｜￥25,600-40,700</strong><p>含 3 人返程机票，不含车辆后续留疆费用。</p><span>返程人员人均约 ￥6,800-10,800。</span></div>
+            <div class="mobile-row-card"><strong>基础合计｜￥22,000-35,500</strong><p>含 3 人返程机票，不含车辆后续留疆费用。</p><span>返程人员人均约 ￥5,800-9,500。</span></div>
           </div>
         </div>
         <div>
@@ -1570,31 +1649,31 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <section id="hotels">
       <h2>住宿推荐</h2>
-      <p class="lead">7 月是新疆旺季，景区镇价格波动大。以下按“住哪一片”推荐，比单押某家酒店更稳。</p>
+      <p class="lead">住宿按“普通连锁 / 本地干净商务酒店 / 有特色但不过度高端的民宿”来选；城市段尽量控制在 300 元/间夜以内，景区镇旺季价格单独放宽。</p>
       <table class="hotel-table desktop-table">
         <thead>
-          <tr><th>日期</th><th>建议住宿地</th><th>优先区域</th><th>预订要点</th></tr>
+          <tr><th>日期</th><th>建议住宿地</th><th>优先区域</th><th>普通酒店选择</th><th>预订要点</th></tr>
         </thead>
         <tbody>
-          <tr><td>7/17</td><td>广元 / 陇南</td><td>广元利州区、陇南武都区高速口附近</td><td>停车方便、24 小时前台、不要进老城窄路。</td></tr>
-          <tr><td>7/18</td><td>兰州</td><td>黄河风情线、西站、城关区交通方便区域</td><td>方便吃饭休整，第二天上高速也顺。</td></tr>
-          <tr><td>7/19</td><td>张掖 / 嘉峪关 / 酒泉</td><td>甘州区、嘉峪关市区、酒泉肃州区</td><td>看当天体力决定，不强行赶到最远点。</td></tr>
-          <tr><td>7/20</td><td>哈密</td><td>市中心、火车站、友好商圈</td><td>选有地面停车场和空调稳定的酒店。</td></tr>
-          <tr><td>7/21</td><td>乌鲁木齐 / 昌吉</td><td>乌鲁木齐外环方便区域、昌吉市区</td><td>昌吉停车和出城通常更轻松。</td></tr>
-          <tr><td>7/22</td><td>清水河 / 伊宁</td><td>清水河镇、伊宁六星街/喀赞其</td><td>赛湖出来晚就住清水河，状态好再推进伊宁。</td></tr>
-          <tr><td>7/23-7/24</td><td>那拉提镇</td><td>游客中心 5-15 分钟车程内</td><td>连住 2 晚，确认空调、热水、停车、早餐。</td></tr>
-          <tr><td>7/25</td><td>和静 / 库尔勒</td><td>和静县城、库尔勒机场路/孔雀河附近</td><td>巴音布鲁克取消就住库尔勒；去了巴音布鲁克可住和静或库尔勒。</td></tr>
+          <tr><td>7/17</td><td>广元 / 陇南</td><td>广元利州区、陇南武都区高速口附近</td><td>汉庭、如家、7天优品、城市便捷、锦江之星、本地商务酒店</td><td>目标 200-300/间夜；停车方便、24 小时前台、不要进老城窄路。</td></tr>
+          <tr><td>7/18</td><td>兰州</td><td>西站、城关区、黄河风情线外围</td><td>汉庭、如家、7天优品、锦江之星、城市便捷、维也纳低价房型</td><td>尽量 300/间夜内；方便吃饭休整，第二天上高速也顺。</td></tr>
+          <tr><td>7/19</td><td>张掖 / 嘉峪关 / 酒泉</td><td>甘州区、嘉峪关市区、酒泉肃州区</td><td>汉庭、如家、7天优品、锦江之星、格林豪泰、本地商务酒店</td><td>看当天体力决定，不强行赶到最远点；优先地面停车。</td></tr>
+          <tr><td>7/20</td><td>哈密</td><td>市中心、火车站、友好商圈</td><td>汉庭、如家、7天优品、城市便捷、格林豪泰、维也纳低价房型</td><td>目标 200-300/间夜；选空调稳定、有停车场的。</td></tr>
+          <tr><td>7/21</td><td>乌鲁木齐 / 昌吉</td><td>乌鲁木齐外环方便区域、昌吉市区</td><td>汉庭、如家、7天优品、锦江之星、城市便捷、本地商务酒店</td><td>更建议昌吉，停车和出城通常更轻松。</td></tr>
+          <tr><td>7/22</td><td>清水河 / 伊宁</td><td>清水河镇、伊宁六星街/喀赞其外围</td><td>普通连锁、本地商务酒店、当地干净民宿</td><td>赛湖出来晚就住清水河，状态好再推进伊宁；尽量 300/间夜内。</td></tr>
+          <tr><td>7/23-7/24</td><td>那拉提镇</td><td>游客中心 5-15 分钟车程内</td><td>本地民宿、客栈、普通宾馆、家庭房</td><td>景区旺季可放宽到 400-700/间夜；连住 2 晚，确认空调、热水、停车、早餐。</td></tr>
+          <tr><td>7/25</td><td>和静 / 库尔勒</td><td>和静县城、库尔勒机场路/孔雀河附近</td><td>汉庭、如家、7天优品、城市便捷、锦江之星、本地商务酒店</td><td>和静/库尔勒尽量 300/间夜内；若住巴音布鲁克镇，旺季价格单独放宽。</td></tr>
         </tbody>
       </table>
       <div class="mobile-card-list">
-        <div class="mobile-row-card"><strong>7/17｜广元 / 陇南</strong><p>住广元利州区或陇南武都区高速口附近。</p><span>重点：停车方便、24 小时前台。</span></div>
-        <div class="mobile-row-card"><strong>7/18｜兰州</strong><p>住黄河风情线、西站或城关区交通方便区域。</p><span>重点：方便吃饭休整。</span></div>
-        <div class="mobile-row-card"><strong>7/19｜张掖 / 嘉峪关 / 酒泉</strong><p>看当天体力决定，不强行赶到最远点。</p></div>
-        <div class="mobile-row-card"><strong>7/20｜哈密</strong><p>住市中心、火车站或友好商圈。</p><span>重点：空调稳定、有停车场。</span></div>
-        <div class="mobile-row-card"><strong>7/21｜乌鲁木齐 / 昌吉</strong><p>昌吉停车和出城通常更轻松。</p></div>
-        <div class="mobile-row-card"><strong>7/22｜清水河 / 伊宁</strong><p>赛湖出来晚就住清水河，状态好再推进伊宁。</p></div>
-        <div class="mobile-row-card"><strong>7/23-7/24｜那拉提镇</strong><p>连住 2 晚，游客中心 5-15 分钟车程内。</p><span>重点：确认空调、热水、停车、早餐。</span></div>
-        <div class="mobile-row-card"><strong>7/25｜和静 / 库尔勒</strong><p>巴音布鲁克取消就住库尔勒；去了可住和静或库尔勒。</p></div>
+        <div class="mobile-row-card"><strong>7/17｜广元 / 陇南</strong><p>汉庭、如家、7天优品、城市便捷、锦江之星或本地商务酒店。</p><span>目标 200-300/间夜，重点看停车和 24 小时前台。</span></div>
+        <div class="mobile-row-card"><strong>7/18｜兰州</strong><p>西站、城关区或黄河风情线外围，普通连锁优先。</p><span>尽量 300/间夜内，确认停车场入口。</span></div>
+        <div class="mobile-row-card"><strong>7/19｜张掖 / 嘉峪关 / 酒泉</strong><p>普通连锁或本地商务酒店，按当天体力选城市。</p><span>优先地面停车，不强行赶到最远点。</span></div>
+        <div class="mobile-row-card"><strong>7/20｜哈密</strong><p>市中心、火车站或友好商圈，选普通连锁/商务酒店。</p><span>重点：空调稳定、有停车场。</span></div>
+        <div class="mobile-row-card"><strong>7/21｜乌鲁木齐 / 昌吉</strong><p>更建议昌吉，普通连锁和本地商务酒店更容易控预算。</p><span>停车和出城通常更轻松。</span></div>
+        <div class="mobile-row-card"><strong>7/22｜清水河 / 伊宁</strong><p>清水河镇或伊宁六星街/喀赞其外围，普通酒店或干净民宿。</p><span>赛湖出来晚就住清水河。</span></div>
+        <div class="mobile-row-card"><strong>7/23-7/24｜那拉提镇</strong><p>本地民宿、客栈、普通宾馆或家庭房。</p><span>景区旺季可放宽到 400-700/间夜，确认热水和停车。</span></div>
+        <div class="mobile-row-card"><strong>7/25｜和静 / 库尔勒</strong><p>和静/库尔勒选普通连锁或本地商务酒店，尽量 300/间夜内。</p><span>若住巴音布鲁克镇，旺季价格单独放宽。</span></div>
       </div>
     </section>
 
@@ -1614,7 +1693,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
         <div class="card">
           <strong>车辆准备</strong>
-          <p>7 月 15 日购入的新 SUV，出发前重点不是保养，而是手续和基础检查：临牌有效范围、保险生效、胎压、备胎/补胎工具、冷却液、玻璃水、雨刮、随车工具。独库山路长下坡多，自动挡也要合理使用低速挡控速。</p>
+          <p>新SUV，出发前重点不是保养，而是手续和基础检查：临牌有效范围、保险生效、胎压、备胎/补胎工具、冷却液、玻璃水、雨刮、随车工具。独库山路长下坡多，自动挡也要合理使用低速挡控速。</p>
         </div>
         <div class="card">
           <strong>随身装备</strong>
@@ -1665,16 +1744,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     };
 
     const dayRoutes = [
-      { day: "D0", date: "7/17 晚", title: "成都 → 广元/陇南", color: "#2563a8", keys: ["chengdu", "guangyuan"], note: "夜间前置，不硬赶。" },
-      { day: "D1", date: "7/18", title: "广元/陇南 → 天水 → 兰州", color: "#1d7d67", keys: ["guangyuan", "tianshui", "lanzhou"], note: "麦积山可选，住兰州。" },
-      { day: "D2", date: "7/19", title: "兰州 → 张掖/嘉峪关", color: "#a45f16", keys: ["lanzhou", "zhangye", "jiayuguan"], note: "河西走廊边走边停，不去七彩丹霞。" },
-      { day: "D3", date: "7/20", title: "嘉峪关/酒泉 → 哈密", color: "#b42318", keys: ["jiayuguan", "hami"], note: "稳稳进疆，住哈密。" },
-      { day: "D4", date: "7/21", title: "哈密 → 吐鲁番 → 乌鲁木齐/昌吉", color: "#7a4cc2", keys: ["hami", "turpan", "changji"], note: "吐鲁番只轻游一处。" },
-      { day: "D5", date: "7/22", title: "乌鲁木齐/昌吉 → 赛里木湖 → 伊宁", color: "#0f766e", keys: ["changji", "sayram", "yining"], note: "赛里木湖必去，晚了住清水河。" },
-      { day: "D6", date: "7/23", title: "伊宁 → 那拉提", color: "#15803d", keys: ["yining", "nalati"], note: "下午轻量入园。" },
-      { day: "D7", date: "7/24", title: "那拉提全天", color: "#65a30d", keys: ["nalatiDay"], note: "那拉提慢游，继续住那拉提。" },
-      { day: "D8", date: "7/25", title: "那拉提 → 巴音布鲁克可选 / 和静", color: "#d97706", keys: ["nalati", "bayin", "hejing"], optional: true, note: "巴音布鲁克视天气路况决定，不好就改走和静。" },
-      { day: "D9", date: "7/26", title: "和静/巴音布鲁克 → 库尔勒机场", color: "#475569", keys: ["hejing", "korla"], note: "库尔勒只做返程机场和留疆起点。" }
+      { day: "D0", date: "7/17 晚", title: "成都 → 广元/陇南", distance: "约 280-450 km", color: "#2563a8", keys: ["chengdu", "guangyuan"], note: "夜间前置，不硬赶。" },
+      { day: "D1", date: "7/18", title: "广元/陇南 → 天水 → 兰州", distance: "约 500-650 km", color: "#1d7d67", keys: ["guangyuan", "tianshui", "lanzhou"], note: "麦积山可选，住兰州。" },
+      { day: "D2", date: "7/19", title: "兰州 → 张掖/嘉峪关", distance: "约 500-730 km", color: "#a45f16", keys: ["lanzhou", "zhangye", "jiayuguan"], note: "河西走廊边走边停，不去七彩丹霞。" },
+      { day: "D3", date: "7/20", title: "嘉峪关/酒泉 → 哈密", distance: "约 600-720 km", color: "#b42318", keys: ["jiayuguan", "hami"], note: "稳稳进疆，住哈密。" },
+      { day: "D4", date: "7/21", title: "哈密 → 吐鲁番 → 乌鲁木齐/昌吉", distance: "约 600-650 km", color: "#7a4cc2", keys: ["hami", "turpan", "changji"], note: "吐鲁番只轻游一处。" },
+      { day: "D5", date: "7/22", title: "乌鲁木齐/昌吉 → 赛里木湖 → 伊宁", distance: "约 560-650 km", color: "#0f766e", keys: ["changji", "sayram", "yining"], note: "赛里木湖必去，晚了住清水河。" },
+      { day: "D6", date: "7/23", title: "伊宁 → 那拉提", distance: "约 270-330 km", color: "#15803d", keys: ["yining", "nalati"], note: "下午轻量入园。" },
+      { day: "D7", date: "7/24", title: "那拉提全天", distance: "景区内轻游，少量用车", color: "#65a30d", keys: ["nalatiDay"], note: "那拉提慢游，继续住那拉提。" },
+      { day: "D8", date: "7/25", title: "那拉提 → 巴音布鲁克可选 / 和静", distance: "方案 A 约 90-140 km；方案 B 转和静/库尔勒", color: "#d97706", keys: ["nalati", "bayin", "hejing"], optional: true, note: "巴音布鲁克视天气路况决定，不好就改走和静。" },
+      { day: "D9", date: "7/26", title: "和静/巴音布鲁克 → 库尔勒机场", distance: "约 90-350 km", color: "#475569", keys: ["hejing", "korla"], note: "库尔勒只做返程机场和留疆起点。" }
     ];
 
     const map = L.map("map", { scrollWheelZoom: false }).setView([40.1, 91.8], 5);
@@ -1708,7 +1787,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
           opacity: .86,
           dashArray: route.optional ? "10 8" : null
         }).addTo(map);
-        line.bindPopup(`<strong>${route.day} ${route.date}</strong><br>${route.title}<br>${route.note}`);
+        line.bindPopup(`<strong>${route.day} ${route.date}</strong><br>${route.title}<br>${route.distance}<br>${route.note}`);
         routeLayers.push({ route, layer: line });
       }
 
@@ -1716,7 +1795,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       const lastPlace = routePoints[routePoints.length - 1];
       L.marker(firstPlace.coord, { icon: makeDayIcon(route.day, route.color) })
         .addTo(map)
-        .bindPopup(`<strong>${route.day} ${route.date}</strong><br>${route.title}<br>${route.note}`);
+        .bindPopup(`<strong>${route.day} ${route.date}</strong><br>${route.title}<br>${route.distance}<br>${route.note}`);
 
       if (lastPlace && lastPlace !== firstPlace) {
         L.circleMarker(lastPlace.coord, {
@@ -1732,7 +1811,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       card.type = "button";
       card.className = "map-day-card";
       card.style.setProperty("--day-color", route.color);
-      card.innerHTML = `<strong>${route.day} ${route.date}</strong><span>${route.title}</span><span>${route.note}</span>`;
+      card.innerHTML = `<strong>${route.day} ${route.date}</strong><span>${route.title}</span><span class="distance">${route.distance}</span><span>${route.note}</span>`;
       card.addEventListener("click", () => {
         const bounds = L.latLngBounds(latlngs);
         map.fitBounds(bounds.pad(.18), { maxZoom: route.keys.length === 1 ? 11 : 8 });
