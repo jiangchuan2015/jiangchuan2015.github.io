@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="2026年成都至库尔勒新疆自驾实际行程完整收官记录" />
+  <title>成都自驾新疆实际行程｜2026.7.18-7.26</title>
+  <style>
+    :root {
+      --ink: #152436;
+      --muted: #607086;
+      --line: #d8e2ec;
+      --paper: #ffffff;
+      --wash: #f2f6f9;
+      --teal: #177b70;
+      --blue: #2563a8;
+      --orange: #c96b12;
+      --red: #ad3e32;
+      --green-wash: #eaf7f2;
+      --orange-wash: #fff4e7;
+      --red-wash: #fff0ee;
+      --shadow: 0 12px 30px rgba(21, 36, 54, .1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--wash);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.62;
+    }
+
+    a { color: var(--blue); }
+
+    .wrap {
+      width: min(1180px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 24px 0 42px;
+    }
+
+    .hero {
+      overflow: hidden;
+      padding: 30px;
+      border-radius: 8px;
+      background:
+        linear-gradient(118deg, rgba(18, 45, 56, .95), rgba(25, 71, 79, .86)),
+        radial-gradient(circle at 80% 20%, rgba(226, 181, 112, .45), transparent 32%);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, .34);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, .9);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 900px;
+      margin: 0;
+      color: rgba(255, 255, 255, .88);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      min-height: 84px;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, .24);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, .76);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .nav a {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    section {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .lead {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .notice {
+      padding: 14px 16px;
+      border-left: 4px solid var(--orange);
+      border-radius: 6px;
+      background: var(--orange-wash);
+      color: #7a430e;
+    }
+
+    .notice strong { color: #733b07; }
+
+    .route-map {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #eff5f7;
+    }
+
+    .route-map svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .amap-actual {
+      position: relative;
+      height: 560px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #dfe8ef;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .amap-actual.is-dragging { cursor: grabbing; }
+
+    .amap-tiles,
+    .amap-lines,
+    .amap-markers {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .amap-tiles { pointer-events: none; }
+
+    .amap-tile {
+      position: absolute;
+      width: 256px;
+      height: 256px;
+      max-width: none;
+      user-select: none;
+    }
+
+    .amap-lines {
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .amap-markers { pointer-events: none; }
+
+    .amap-marker {
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      border: 3px solid #fff;
+      border-radius: 999px;
+      background: var(--teal);
+      box-shadow: 0 3px 10px rgba(21, 36, 54, .32);
+      transform: translate(-50%, -50%);
+    }
+
+    .amap-marker.start,
+    .amap-marker.return { background: var(--blue); }
+
+    .amap-marker.overlap { background: #7a4cc2; }
+
+    .amap-marker-label {
+      position: absolute;
+      max-width: 118px;
+      padding: 3px 6px;
+      border: 1px solid rgba(21, 36, 54, .22);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .92);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.25;
+      white-space: nowrap;
+      transform: translate(9px, -25px);
+      box-shadow: 0 3px 10px rgba(21, 36, 54, .16);
+    }
+
+    .amap-caption {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      max-width: min(620px, calc(100% - 24px));
+      padding: 8px 10px;
+      border: 1px solid rgba(21, 36, 54, .16);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .9);
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .amap-controls {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: grid;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .amap-zoom-button {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid rgba(21, 36, 54, .24);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .94);
+      color: var(--ink);
+      font: 500 24px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(21, 36, 54, .16);
+    }
+
+    .amap-zoom-button:hover { background: #fff; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      font-size: 13px;
+    }
+
+    .swatch {
+      width: 14px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--teal);
+    }
+
+    .swatch.planned {
+      background: repeating-linear-gradient(90deg, var(--orange) 0 7px, transparent 7px 12px);
+    }
+
+    .swatch.flight { background: var(--blue); }
+    .swatch.repeat { background: #7a4cc2; }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .day {
+      display: grid;
+      grid-template-columns: 136px minmax(0, 1fr);
+      gap: 16px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .day-head {
+      padding-right: 14px;
+      border-right: 1px solid var(--line);
+    }
+
+    .day-head strong {
+      display: block;
+      font-size: 23px;
+      line-height: 1.1;
+    }
+
+    .day-head span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status {
+      display: inline-flex;
+      margin-top: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--green-wash);
+      color: #126a57;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status.planned {
+      background: var(--orange-wash);
+      color: #914a09;
+    }
+
+    .day h3 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.35;
+    }
+
+    .meta {
+      margin: 5px 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .day ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 13px;
+    }
+
+    .detail {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fbfcfd;
+      font-size: 14px;
+    }
+
+    .detail strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .detail.alert {
+      border-color: #f0c38f;
+      background: var(--orange-wash);
+      color: #7a430e;
+    }
+
+    .detail.route-note {
+      grid-column: 1 / -1;
+      border-color: #b8dbd4;
+      background: #f1f8f6;
+      color: #275a54;
+    }
+
+    .flight {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .flight-item {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+    }
+
+    .flight-item strong {
+      display: block;
+      font-size: 19px;
+    }
+
+    .flight-item span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .check {
+      padding: 15px;
+      border-left: 4px solid var(--orange);
+      border-radius: 6px;
+      background: #fbfcfd;
+    }
+
+    .check strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .check p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-note {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      .wrap {
+        width: min(100vw - 20px, 720px);
+        padding-top: 10px;
+      }
+
+      .hero, section { padding: 16px; }
+      .stats, .details, .flight, .check-grid { grid-template-columns: 1fr; }
+      .amap-actual { height: 430px; }
+
+      .day {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .day-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 0 12px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .day-head strong { font-size: 20px; }
+      .day-head span { margin: 0; }
+      .status { margin: 0 0 0 auto; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .wrap { width: 100%; padding: 0; }
+      .hero, section { box-shadow: none; }
+      .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <span class="eyebrow">实际行程记录｜2026.7.18 - 7.26｜成都出发 · 库尔勒返程</span>
+      <h1>成都自驾新疆实际行程</h1>
+      <p>从张掖、吐鲁番、库尔勒到独库、那拉提、霍尔果斯、赛里木湖和唐布拉。9 天实际行程已完整收官：自驾回到库尔勒，交车后从梨城机场顺利飞抵成都。</p>
+      <div class="stats">
+        <div class="stat"><strong>8 个自驾日</strong><span>7 月 18 日至 25 日，实际路线圆满完成</span></div>
+        <div class="stat"><strong>8 晚落点</strong><span>张掖、吐鲁番、库尔勒、巴音、那拉提、霍尔果斯、尼勒克</span></div>
+        <div class="stat"><strong>独库两次经过</strong><span>D4 南段进巴音，D8 经乔尔玛回南疆</span></div>
+        <div class="stat"><strong>7 月 27 日收官</strong><span>延误后深夜抵达，凌晨 01:30 到家</span></div>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="页面导航">
+      <a href="#route">路线图</a>
+      <a href="#days">每日记录</a>
+      <a href="#d8">D8 回库尔勒</a>
+      <a href="#flight">返程航班</a>
+    </nav>
+
+    <section id="route">
+      <h2>实际路线图</h2>
+      <p class="lead">以库尔勒为核心完成一条大环线：D8 从唐布拉经独库转入 G218、G0711 回库尔勒。</p>
+      <div id="amap-actual" class="amap-actual" role="region" aria-label="高德地图实际行程点位与路线标注">
+        <div class="amap-tiles" aria-hidden="true"></div>
+        <svg class="amap-lines" aria-hidden="true"></svg>
+        <div class="amap-markers" aria-hidden="true"></div>
+        <div class="amap-controls">
+          <button id="amap-zoom-in" class="amap-zoom-button" type="button" aria-label="放大地图">+</button>
+          <button id="amap-zoom-out" class="amap-zoom-button" type="button" aria-label="缩小地图">−</button>
+        </div>
+        <div class="amap-caption">高德实际底图：标注实际住宿、景点与途经点；实线为实际行程方向，D8 从独库转 G218、G0711 直接回库尔勒。</div>
+      </div>
+      <div class="route-map">
+        <svg viewBox="0 0 1180 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="route-title route-desc">
+          <title id="route-title">成都至库尔勒实际自驾行程路线图</title>
+          <desc id="route-desc">路线从成都到张掖、吐鲁番和库尔勒，进入库车、巴音布鲁克、那拉提、霍尔果斯、赛里木湖、尼勒克和唐布拉后，经独库公路、S321、G218和G0711乌若高速回到库尔勒。</desc>
+          <defs>
+            <linearGradient id="map-bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e8f1f4"/>
+              <stop offset="1" stop-color="#f8fafc"/>
+            </linearGradient>
+            <filter id="map-shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#162839" flood-opacity=".16"/>
+            </filter>
+          </defs>
+          <rect width="1180" height="700" fill="url(#map-bg)"/>
+          <path d="M82 568 C180 488 233 442 315 367 C378 310 452 291 520 384 C571 452 610 427 680 341 C731 278 787 246 855 235 C930 224 1005 178 1062 223 C1110 261 1072 325 1018 339 C951 356 892 401 832 439 C756 487 688 543 601 527 C491 507 408 551 293 583" fill="none" stroke="#d5e1ea" stroke-width="34" stroke-linecap="round"/>
+          <path d="M82 568 C180 488 233 442 315 367 C378 310 452 291 520 384 C571 452 610 427 680 341 C731 278 787 246 855 235 C930 224 1005 178 1062 223 C1110 261 1072 325 1018 339 C951 356 892 401 832 439 C756 487 688 543 601 527 C491 507 408 551 293 583" fill="none" stroke="#bfcfd9" stroke-width="2" stroke-dasharray="8 12"/>
+
+          <path d="M112 574 L250 405 L380 342 L525 438 L500 393 L596 360 L680 316 L760 278 L850 234" fill="none" stroke="#177b70" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M850 234 L962 184 L925 239 L786 330" fill="none" stroke="#177b70" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M786 330 L742 316 L723 395 L664 478 L525 438" fill="none" stroke="#2563a8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <g fill="#fff" stroke-width="4" filter="url(#map-shadow)">
+            <circle cx="112" cy="574" r="11" stroke="#2563a8"/>
+            <circle cx="250" cy="405" r="11" stroke="#177b70"/>
+            <circle cx="380" cy="342" r="11" stroke="#177b70"/>
+            <circle cx="525" cy="438" r="12" stroke="#177b70"/>
+            <circle cx="500" cy="393" r="10" stroke="#177b70"/>
+            <circle cx="596" cy="360" r="10" stroke="#177b70"/>
+            <circle cx="680" cy="316" r="11" stroke="#177b70"/>
+            <circle cx="760" cy="278" r="10" stroke="#177b70"/>
+            <circle cx="850" cy="234" r="11" stroke="#177b70"/>
+            <circle cx="962" cy="184" r="11" stroke="#177b70"/>
+            <circle cx="925" cy="239" r="10" stroke="#177b70"/>
+            <circle cx="786" cy="330" r="11" stroke="#177b70"/>
+            <circle cx="742" cy="316" r="10" stroke="#2563a8"/>
+            <circle cx="723" cy="395" r="10" stroke="#2563a8"/>
+            <circle cx="664" cy="478" r="10" stroke="#2563a8"/>
+          </g>
+
+          <g fill="#152436" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15">
+            <text x="76" y="608">成都</text>
+            <text x="218" y="390">张掖</text>
+            <text x="334" y="326">吐鲁番 / 火焰山</text>
+            <text x="470" y="472">库尔勒 / 罗布人村寨</text>
+            <text x="458" y="383">库车 / 龟兹巷</text>
+            <text x="564" y="391">巴音布鲁克</text>
+            <text x="650" y="298">那拉提</text>
+            <text x="727" y="264">伊宁方向</text>
+            <text x="813" y="218">霍尔果斯</text>
+            <text x="926" y="165">赛里木湖</text>
+            <text x="895" y="267">果子沟</text>
+            <text x="754" y="356">尼勒克</text>
+            <text x="700" y="305">乔尔玛</text>
+            <text x="691" y="421">唐布拉百里画廊</text>
+            <text x="629" y="510">G218 南下</text>
+          </g>
+
+          <g font-family="Microsoft YaHei, Arial, sans-serif" font-size="13">
+            <g transform="translate(258 350)"><rect width="104" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="14" y="19" fill="#36556b">G30 连霍高速</text></g>
+            <g transform="translate(396 400)"><rect width="112" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="14" y="19" fill="#36556b">G3012 吐和高速</text></g>
+            <g transform="translate(537 315)"><rect width="118" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="14" y="19" fill="#36556b">G217 独库南段</text></g>
+            <g transform="translate(668 255)"><rect width="122" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="14" y="19" fill="#36556b">G218 伊犁方向</text></g>
+            <g transform="translate(858 194)"><rect width="90" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="14" y="19" fill="#36556b">G30 西行</text></g>
+            <g transform="translate(759 363)"><rect width="84" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="18" y="19" fill="#36556b">S321</text></g>
+            <g transform="translate(638 442)"><rect width="124" height="28" rx="14" fill="#ffffff" stroke="#b9c9d5"/><text x="14" y="19" fill="#36556b">G0711乌若高速</text></g>
+            <g transform="translate(688 328)"><rect width="186" height="28" rx="14" fill="#edf4fb" stroke="#b9d0e8"/><text x="14" y="19" fill="#174e82">D8 独库转G218</text></g>
+          </g>
+
+          <g transform="translate(35 34)" font-family="Microsoft YaHei, Arial, sans-serif">
+            <rect width="670" height="108" rx="8" fill="#ffffff" stroke="#d8e2ec"/>
+            <line x1="20" y1="31" x2="71" y2="31" stroke="#177b70" stroke-width="8" stroke-linecap="round"/>
+            <text x="86" y="36" fill="#152436" font-size="17" font-weight="700">D1-D7 环线前半程</text>
+            <text x="86" y="59" fill="#607086" font-size="13">高速、国道和省道不重复：成都 → 张掖 → 吐鲁番 → 库尔勒 → 霍尔果斯 → 尼勒克</text>
+            <line x1="20" y1="82" x2="71" y2="82" stroke="#2563a8" stroke-width="8" stroke-linecap="round"/>
+            <text x="86" y="87" fill="#152436" font-size="17" font-weight="700">D8 环线回库尔勒</text>
+            <text x="86" y="105" fill="#607086" font-size="13">尼勒克 → 唐布拉 → 独库 → G218 → G0711 → 库尔勒</text>
+          </g>
+
+          <g transform="translate(765 530)" font-family="Microsoft YaHei, Arial, sans-serif">
+            <rect width="350" height="84" rx="8" fill="#edf4fb" stroke="#b9d0e8"/>
+            <text x="18" y="29" fill="#174e82" font-size="18" font-weight="700">库尔勒环线完成</text>
+            <text x="18" y="55" fill="#174e82" font-size="14">D8 晚到库尔勒：87号烤包子 + 希岸·轻雅酒店。</text>
+          </g>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><i class="swatch"></i>不重复的高速 / 国道 / 省道路段</span>
+        <span><i class="swatch flight"></i>D8 经 G218、G0711 回库尔勒</span>
+        <span><i class="swatch flight"></i>D8 独库转 G218、G0711 回库尔勒</span>
+        <span><i class="swatch flight"></i>D9 库尔勒机场返程</span>
+      </div>
+    </section>
+
+    <section id="days">
+      <h2>每日实际行程</h2>
+      <p class="lead">记录以这次实际走法为准，补充每天的导航路线与关键节点。</p>
+      <div class="timeline">
+        <article class="day">
+          <div class="day-head"><strong>D1</strong><span>7 月 18 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>成都 → 张掖</h3>
+            <p class="meta">05:30 从成都出发｜全天长途高速｜晚宿张掖</p>
+            <ul>
+              <li>按凌晨 5:30 出发执行，把首日大里程放在全员精神最充足的阶段。</li>
+              <li>当天以赶路、补给和休息为主，不额外安排景点。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>住宿</strong>张掖丝路迎宾酒店</div>
+              <div class="detail route-note"><strong>导航路线</strong>成都龙泉驿 → 武威 → G30 永登段 → 张掖；全程约 1,001 km。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D2</strong><span>7 月 19 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>张掖 → 火焰山 → 吐鲁番</h3>
+            <p class="meta">河西走廊继续向西｜火焰山打卡｜晚宿吐鲁番</p>
+            <ul>
+              <li>从张掖继续西行，安排火焰山作为本次行程第一个正式景点。</li>
+              <li>吐鲁番高温干燥，白天以防晒、补水、轻装为主。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>景点</strong>火焰山</div>
+              <div class="detail"><strong>住宿</strong>吐鲁番万星商务酒店</div>
+              <div class="detail"><strong>美食</strong>葡萄、馕、拌面、烤肉；避免暴晒后重油重辣。</div>
+              <div class="detail route-note"><strong>导航路线</strong>张掖 → 哈密 → 吐鲁番（火焰山）→ 吐鲁番。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D3</strong><span>7 月 20 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>吐鲁番 → 库尔勒 → 罗布人村寨</h3>
+            <p class="meta">中午到库尔勒｜二姐安排午餐｜下午游罗布人村寨</p>
+            <ul>
+              <li>中午抵达库尔勒后，吃一顿丰盛午餐并完成休整。</li>
+              <li>下午进入罗布人村寨，体验塔里木河、沙漠、胡杨和村寨景观。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>午餐</strong>二姐安排的库尔勒丰盛午餐</div>
+              <div class="detail"><strong>景点</strong>罗布人村寨</div>
+              <div class="detail"><strong>住宿</strong>库尔勒乐瑞酒店</div>
+              <div class="detail route-note"><strong>导航路线</strong>吐鲁番高昌区 → 库尔勒 → 罗布人村寨；全程约 432.5 km。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D4</strong><span>7 月 21 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>库尔勒 → 库车龟兹巷 → 独库公路 → 巴音布鲁克</h3>
+            <p class="meta">上午游库车｜下午自驾独库｜晚上抵达巴音布鲁克</p>
+            <ul>
+              <li>库车先游龟兹巷，感受南疆老城和龟兹文化氛围。</li>
+              <li>下午切入独库公路，晚间抵达巴音布鲁克镇休息。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>景点</strong>龟兹巷、独库南段沿线</div>
+              <div class="detail"><strong>住宿</strong>巴音布鲁克吉日格勒大酒店</div>
+              <div class="detail"><strong>提醒</strong>山区温度明显下降，抵达后优先热水、晚餐和休息。</div>
+              <div class="detail route-note"><strong>导航路线</strong>库尔勒香梨大道 → 库车 → 独库南段 → 巴音布鲁克。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D5</strong><span>7 月 22 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>巴音布鲁克九曲十八弯 → 那拉提</h3>
+            <p class="meta">上午九曲十八弯｜下午继续自驾｜晚宿那拉提</p>
+            <ul>
+              <li>上午安排九曲十八弯。</li>
+              <li>下午自驾前往那拉提，晚上用羊肉火锅为草原段收尾。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>景点</strong>巴音布鲁克九曲十八弯</div>
+              <div class="detail"><strong>住宿</strong>那拉提若隐民宿</div>
+              <div class="detail"><strong>晚餐</strong>羊肉火锅</div>
+              <div class="detail route-note"><strong>导航路线</strong>独库沿线 → 九曲十八弯 → 那拉提 → 花海那拉提正门；全程约 176.8 km。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D6</strong><span>7 月 23 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>那拉提游玩 → 霍尔果斯 → 哈萨克斯坦</h3>
+            <p class="meta">白天游那拉提｜15:00 出发｜21:00 到霍尔果斯</p>
+            <ul>
+              <li>白天游玩那拉提，15:00 后转场霍尔果斯。</li>
+              <li>晚间临时前往哈萨克斯坦，游览新国门相关景点。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>景点</strong>那拉提草原、霍尔果斯新国门</div>
+              <div class="detail"><strong>跨境记录</strong>以当日实际通关与证件手续为准</div>
+              <div class="detail"><strong>住宿</strong>霍尔果斯歆北国际酒店</div>
+              <div class="detail route-note"><strong>导航路线</strong>那拉提景区（020 乡道、空中草原）→ 新源 → 霍尔果斯新国门 / 国门景区。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D7</strong><span>7 月 24 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>霍尔果斯 → 赛里木湖 → 尼勒克 → 唐布拉百里画廊 </h3>
+            <p class="meta">10:00 到赛里木湖｜17:00 自驾去百里画廊｜晚宿尼勒克</p>
+            <ul>
+              <li>上午到达赛里木湖，完成环湖观景和湖畔停留。</li>
+              <li>17:00 转场唐布拉百里画廊，晚宿尼勒克县城。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>景点</strong>赛里木湖</div>
+              <div class="detail"><strong>住宿</strong>尼勒克县城云顶酒店</div>
+              <div class="detail route-note"><strong>导航路线</strong>霍尔果斯 → 赛里木湖 → 博乐 203 县道 → 百里画廊 → 尼勒克。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day" id="d8">
+          <div class="day-head"><strong>D8</strong><span>7 月 25 日</span><b class="status">已完成</b></div>
+          <div>
+            <h3>尼勒克 → 唐布拉百里画廊观景台 → S321 / 独库公路 / G218 / G0711 乌若高速 → 库尔勒</h3>
+            <p class="meta">08:00 出发｜11:30 到百里画廊观景台｜晚到库尔勒</p>
+            <ul>
+              <li>上午从尼勒克出发，11:30 到达百里画廊观景台。</li>
+              <li>之后经 S321、独库公路、G218 和 G0711 乌若高速一路回库尔勒，完成北疆到南疆的长距离收尾。</li>
+              <li>晚餐到 87号烤包子，之后入住酒店；</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>08:00</strong>尼勒克县城云顶酒店出发</div>
+              <div class="detail"><strong>11:30</strong>百里画廊观景台</div>
+              <div class="detail"><strong>晚餐</strong>库尔勒 87号烤包子</div>
+              <div class="detail"><strong>住宿</strong>库尔勒希岸·轻雅酒店</div>
+              <div class="detail route-note"><strong>导航路线</strong>尼勒克团结路 / 315 省道 → 唐布拉一线 → 独库 → G218 → G0711 → 库尔勒 → 87 号烤包子 → 乐瑞酒店。</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="day">
+          <div class="day-head"><strong>D9</strong><span>7 月 26 日</span><b class="status">圆满收官</b></div>
+          <div>
+            <h3>库尔勒整备 → 库尔勒梨城机场 → 成都天府 T2</h3>
+            <p class="meta">睡到自然醒｜洗车、加满油、交车｜15:00 前往机场｜航班延误后深夜抵达成都</p>
+            <ul>
+              <li>上午睡到自然醒，完成洗车、加满油、整理行李和个人物品。</li>
+              <li>将车交还二姐，下午 15:00 前往库尔勒梨城机场。</li>
+              <li>航班延误后于 23:40 抵达天府 T2，7 月 27 日凌晨 01:30 到家。</li>
+            </ul>
+            <div class="details">
+              <div class="detail"><strong>车辆</strong>洗车、加满油后交还二姐</div>
+              <div class="detail"><strong>15:00</strong>从库尔勒市区前往梨城机场</div>
+              <div class="detail"><strong>航班</strong>南航 CZ6925，延误至 20:15 起飞，23:40 抵达成都天府 T2</div>
+              <div class="detail"><strong>到家</strong>7 月 27 日凌晨 01:30</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>D8 实际回程记录</h2>
+      <p class="lead">从尼勒克一路回到库尔勒，这一段把百里画廊、S321、独库公路、G218 和 G0711 乌若高速串成了本次旅程最长的收尾线。</p>
+      <div class="check-grid">
+        <div class="check">
+          <strong>08:00 出发</strong>
+          <p>从尼勒克县城云顶酒店出发，按既定节奏进入百里画廊方向。</p>
+        </div>
+        <div class="check">
+          <strong>11:30 观景台</strong>
+          <p>到达百里画廊观景台后继续回撤，不在沿途额外增加游玩任务。</p>
+        </div>
+        <div class="check">
+          <strong>库尔勒收尾</strong>
+          <p>到 87 号烤包子吃晚餐，入住希岸·轻雅酒店，为 D9 洗车、交车和送机留出完整空间。</p>
+        </div>
+      </div>
+      <p class="footer-note">D8 的长距离回撤已经完成；这趟实际线路不再沿用此前“经和静回库尔勒”的版本。</p>
+    </section>
+
+    <section id="flight">
+      <h2>返程航班 · 已完成</h2>
+      <div class="flight">
+        <div class="flight-item"><strong>15:00</strong><span>从市区前往库尔勒梨城机场</span></div>
+        <div class="flight-item"><strong>20:14</strong><span>CZ6925 延误后起飞</span></div>
+        <div class="flight-item"><strong>23:40</strong><span>抵达成都天府 T2</span></div>
+        <div class="flight-item"><strong>01:30</strong><span>7 月 27 日凌晨到家</span></div>
+      </div>
+      <p class="footer-note">本页为最终实际行程记录。9 天新疆自驾圆满收官：睡饱、洗车、加油、交车、延误起飞、深夜抵达，凌晨 01:30 安全到家。</p>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const mapEl = document.getElementById("amap-actual");
+      if (!mapEl) return;
+
+      const tilesEl = mapEl.querySelector(".amap-tiles");
+      const linesEl = mapEl.querySelector(".amap-lines");
+      const markersEl = mapEl.querySelector(".amap-markers");
+      const zoomInButton = document.getElementById("amap-zoom-in");
+      const zoomOutButton = document.getElementById("amap-zoom-out");
+      const tileSize = 256;
+      let activeZoom = 5;
+      let centerLngLat = null;
+      let previousSize = { width: 0, height: 0 };
+      let dragState = null;
+      let dragRenderFrame = null;
+
+      const points = {
+        chengdu: { name: "成都 · D1 起点", lng: 104.0665, lat: 30.5723, type: "start", dx: 8, dy: -8 },
+        zhangye: { name: "张掖 · 丝路迎宾", lng: 100.4564, lat: 38.9320, dx: 8, dy: -8 },
+        flaming: { name: "火焰山", lng: 89.4798, lat: 42.9514, dx: 8, dy: -8 },
+        turpan: { name: "吐鲁番 · 万星商务", lng: 89.1889, lat: 42.9513, dx: -110, dy: 14 },
+        korla: { name: "库尔勒 · D3 / D8 / D9", lng: 86.1737, lat: 41.7259, type: "return", dx: 8, dy: 9 },
+        lop: { name: "罗布人村寨", lng: 86.4435, lat: 40.9804, dx: 8, dy: 10 },
+        kuqa: { name: "库车龟兹巷", lng: 82.9597, lat: 41.7170, dx: -88, dy: 12 },
+        bayin: { name: "巴音布鲁克", lng: 84.1498, lat: 43.0268, dx: 8, dy: 9 },
+        jiuqu: { name: "九曲十八弯", lng: 84.1642, lat: 43.0412, dx: -104, dy: -24 },
+        nalati: { name: "那拉提 · 若隐民宿", lng: 83.2536, lat: 43.3212, dx: 8, dy: 10 },
+        yining: { name: "伊宁方向", lng: 81.3242, lat: 43.9159, dx: -78, dy: 12 },
+        horgos: { name: "霍尔果斯 · 歆北国际", lng: 80.4191, lat: 44.2192, dx: 8, dy: -8 },
+        sayram: { name: "赛里木湖", lng: 81.1532, lat: 44.5873, dx: 8, dy: -8 },
+        guozigou: { name: "果子沟", lng: 81.0009, lat: 44.4359, dx: 8, dy: 10 },
+        nileke: { name: "尼勒克 · 云顶酒店", lng: 82.5111, lat: 43.7987, dx: 8, dy: 10 },
+        tangbula: { name: "唐布拉观景台 · D8 11:30", lng: 83.4630, lat: 43.7070, dx: 8, dy: 10 },
+        qiaerma: { name: "乔尔玛 · D8 转 G218", lng: 84.1263, lat: 43.9058, type: "return", dx: 8, dy: -25 },
+        g218: { name: "G218 南下", lng: 85.3160, lat: 42.4330, type: "return", dx: 8, dy: 10 },
+        g0711: { name: "G0711 乌若高速", lng: 86.0720, lat: 41.9860, type: "return", dx: -112, dy: 10 }
+      };
+
+      const routeGroups = [
+        { color: "#177b70", keys: ["chengdu", "zhangye"] },
+        { color: "#177b70", keys: ["zhangye", "flaming", "turpan"] },
+        { color: "#177b70", keys: ["turpan", "korla", "lop", "korla"] },
+        { color: "#177b70", keys: ["korla", "kuqa", "bayin"] },
+        { color: "#177b70", keys: ["bayin", "jiuqu", "qiaerma", "nalati"] },
+        { color: "#177b70", keys: ["nalati", "yining", "horgos"] },
+        { color: "#177b70", keys: ["horgos", "sayram", "guozigou", "nileke"] },
+        { color: "#2563a8", keys: ["nileke", "tangbula", "qiaerma", "g218", "g0711", "korla"] }
+      ];
+
+      const projectAtZoom = (lng, lat, zoom) => {
+        const worldSize = tileSize * Math.pow(2, zoom);
+        const x = ((lng + 180) / 360) * worldSize;
+        const sinLat = Math.sin((lat * Math.PI) / 180);
+        const y = (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * worldSize;
+        return { x, y };
+      };
+
+      const project = (lng, lat) => projectAtZoom(lng, lat, activeZoom);
+
+      const unprojectAtZoom = (x, y, zoom) => {
+        const worldSize = tileSize * Math.pow(2, zoom);
+        const lng = (x / worldSize) * 360 - 180;
+        const latitudeRadians = Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / worldSize)));
+        return { lng, lat: (latitudeRadians * 180) / Math.PI };
+      };
+
+      const getFittedView = (width, height) => {
+        const allPoints = Object.values(points);
+        for (let zoom = 6; zoom >= 3; zoom -= 1) {
+          const projected = allPoints.map((point) => projectAtZoom(point.lng, point.lat, zoom));
+          const minX = Math.min(...projected.map((point) => point.x));
+          const maxX = Math.max(...projected.map((point) => point.x));
+          const minY = Math.min(...projected.map((point) => point.y));
+          const maxY = Math.max(...projected.map((point) => point.y));
+          if (maxX - minX <= width - 90 && maxY - minY <= height - 90) {
+            return {
+              zoom,
+              center: unprojectAtZoom((minX + maxX) / 2, (minY + maxY) / 2, zoom)
+            };
+          }
+        }
+
+        const projected = allPoints.map((point) => projectAtZoom(point.lng, point.lat, 3));
+        const centerX = (Math.min(...projected.map((point) => point.x)) + Math.max(...projected.map((point) => point.x))) / 2;
+        const centerY = (Math.min(...projected.map((point) => point.y)) + Math.max(...projected.map((point) => point.y))) / 2;
+        return {
+          zoom: 3,
+          center: unprojectAtZoom(centerX, centerY, 3)
+        };
+      };
+
+      const makeSvgPath = (coords, topLeft) => coords
+        .map((point, index) => {
+          const projected = project(point.lng, point.lat);
+          return `${index === 0 ? "M" : "L"} ${Math.round(projected.x - topLeft.x)} ${Math.round(projected.y - topLeft.y)}`;
+        })
+        .join(" ");
+
+      const addPath = (coords, color, topLeft, width, dashArray = "") => {
+        const namespace = "http://www.w3.org/2000/svg";
+        const d = makeSvgPath(coords, topLeft);
+        const underlay = document.createElementNS(namespace, "path");
+        underlay.setAttribute("d", d);
+        underlay.setAttribute("fill", "none");
+        underlay.setAttribute("stroke", "#ffffff");
+        underlay.setAttribute("stroke-opacity", ".76");
+        underlay.setAttribute("stroke-width", String(width + 4));
+        underlay.setAttribute("stroke-linecap", "round");
+        underlay.setAttribute("stroke-linejoin", "round");
+        linesEl.appendChild(underlay);
+
+        const line = document.createElementNS(namespace, "path");
+        line.setAttribute("d", d);
+        line.setAttribute("fill", "none");
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", String(width));
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("stroke-linejoin", "round");
+        if (dashArray) line.setAttribute("stroke-dasharray", dashArray);
+        linesEl.appendChild(line);
+      };
+
+      const renderMap = (fitToRoute = false) => {
+        const width = mapEl.clientWidth;
+        const height = mapEl.clientHeight;
+        if (!width || !height) return;
+
+        const sizeChanged = Math.abs(width - previousSize.width) > 140 || Math.abs(height - previousSize.height) > 100;
+        if (fitToRoute || !centerLngLat || sizeChanged) {
+          const fittedView = getFittedView(width, height);
+          activeZoom = fittedView.zoom;
+          centerLngLat = fittedView.center;
+        }
+        previousSize = { width, height };
+
+        const centerPoint = project(centerLngLat.lng, centerLngLat.lat);
+        const topLeft = { x: centerPoint.x - width / 2, y: centerPoint.y - height / 2 };
+        const worldTiles = Math.pow(2, activeZoom);
+        const minTileX = Math.floor(topLeft.x / tileSize);
+        const maxTileX = Math.floor((topLeft.x + width) / tileSize);
+        const minTileY = Math.floor(topLeft.y / tileSize);
+        const maxTileY = Math.floor((topLeft.y + height) / tileSize);
+        const fragment = document.createDocumentFragment();
+
+        tilesEl.replaceChildren();
+        for (let tileY = minTileY; tileY <= maxTileY; tileY += 1) {
+          if (tileY < 0 || tileY >= worldTiles) continue;
+          for (let rawTileX = minTileX; rawTileX <= maxTileX; rawTileX += 1) {
+            const tileX = ((rawTileX % worldTiles) + worldTiles) % worldTiles;
+            const tile = document.createElement("img");
+            const subdomain = ((tileX + tileY) % 4) + 1;
+            tile.className = "amap-tile";
+            tile.alt = "";
+            tile.draggable = false;
+            tile.src = `https://webrd0${subdomain}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=${tileX}&y=${tileY}&z=${activeZoom}`;
+            tile.style.left = `${rawTileX * tileSize - topLeft.x}px`;
+            tile.style.top = `${tileY * tileSize - topLeft.y}px`;
+            fragment.appendChild(tile);
+          }
+        }
+        tilesEl.appendChild(fragment);
+
+        linesEl.replaceChildren();
+        linesEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        linesEl.setAttribute("width", String(width));
+        linesEl.setAttribute("height", String(height));
+        routeGroups.forEach((route) => addPath(route.keys.map((key) => points[key]), route.color, topLeft, 5));
+
+        markersEl.replaceChildren();
+        const compactLabels = new Set(["chengdu", "zhangye", "turpan", "korla", "nalati", "horgos", "sayram", "nileke", "tangbula", "qiaerma"]);
+        Object.entries(points).forEach(([key, point]) => {
+          const projected = project(point.lng, point.lat);
+          const x = projected.x - topLeft.x;
+          const y = projected.y - topLeft.y;
+          if (x < -120 || x > width + 120 || y < -80 || y > height + 80) return;
+
+          const marker = document.createElement("span");
+          marker.className = `amap-marker ${point.type || ""}`;
+          marker.style.left = `${x}px`;
+          marker.style.top = `${y}px`;
+          markersEl.appendChild(marker);
+
+          if (width < 600 && !compactLabels.has(key)) return;
+
+          const label = document.createElement("span");
+          label.className = "amap-marker-label";
+          label.textContent = point.name;
+          label.style.left = `${x + (point.dx || 0)}px`;
+          label.style.top = `${y + (point.dy || 0)}px`;
+          markersEl.appendChild(label);
+        });
+      };
+
+      const changeZoom = (delta) => {
+        const nextZoom = Math.min(7, Math.max(3, activeZoom + delta));
+        if (nextZoom === activeZoom) return;
+        activeZoom = nextZoom;
+        renderMap();
+      };
+
+      const scheduleDragRender = () => {
+        if (dragRenderFrame) return;
+        dragRenderFrame = window.requestAnimationFrame(() => {
+          dragRenderFrame = null;
+          renderMap();
+        });
+      };
+
+      const endMapDrag = (event) => {
+        if (!dragState || (event && event.pointerId !== dragState.pointerId)) return;
+        if (dragRenderFrame) {
+          window.cancelAnimationFrame(dragRenderFrame);
+          dragRenderFrame = null;
+          renderMap();
+        }
+        if (mapEl.hasPointerCapture?.(dragState.pointerId)) {
+          mapEl.releasePointerCapture(dragState.pointerId);
+        }
+        dragState = null;
+        mapEl.classList.remove("is-dragging");
+      };
+
+      mapEl.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 && event.pointerType !== "touch") return;
+        if (event.target instanceof Element && event.target.closest(".amap-controls")) return;
+        if (!centerLngLat) return;
+
+        dragState = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          centerPoint: project(centerLngLat.lng, centerLngLat.lat)
+        };
+        mapEl.setPointerCapture?.(event.pointerId);
+        mapEl.classList.add("is-dragging");
+        event.preventDefault();
+      });
+
+      mapEl.addEventListener("pointermove", (event) => {
+        if (!dragState || event.pointerId !== dragState.pointerId) return;
+        const deltaX = event.clientX - dragState.startX;
+        const deltaY = event.clientY - dragState.startY;
+        centerLngLat = unprojectAtZoom(
+          dragState.centerPoint.x - deltaX,
+          dragState.centerPoint.y - deltaY,
+          activeZoom
+        );
+        scheduleDragRender();
+        event.preventDefault();
+      });
+
+      mapEl.addEventListener("pointerup", endMapDrag);
+      mapEl.addEventListener("pointercancel", endMapDrag);
+      mapEl.addEventListener("lostpointercapture", endMapDrag);
+      mapEl.addEventListener("dragstart", (event) => event.preventDefault());
+
+      zoomInButton?.addEventListener("click", () => changeZoom(1));
+      zoomOutButton?.addEventListener("click", () => changeZoom(-1));
+      mapEl.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        changeZoom(event.deltaY < 0 ? 1 : -1);
+      }, { passive: false });
+
+      renderMap(true);
+      if (window.ResizeObserver) {
+        new ResizeObserver(renderMap).observe(mapEl);
+      } else {
+        window.addEventListener("resize", renderMap);
+      }
+    })();
+  </script>
+</body>
+</html>
