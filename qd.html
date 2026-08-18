@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="2026 年 9 月 15 日成都出发，青岛、威海、烟台、蓬莱、大连双人 10 天 9 晚预算旅游攻略。">
+  <title>越过渤海｜2026 胶东到大连双人旅行攻略</title>
+  <style>
+    :root {
+      --ink: #152a35;
+      --muted: #5f7179;
+      --paper: #f7fbfa;
+      --seafoam: #dcefe8;
+      --sea: #0e7181;
+      --blue: #157dbe;
+      --coral: #df6848;
+      --sun: #e4b342;
+      --line: #c9d9d7;
+      --shadow: 0 12px 30px rgba(21, 42, 53, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.65;
+    }
+
+    button, input { font: inherit; }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 58px;
+      padding: 0 5vw;
+      color: #f7fbfa;
+      background: rgba(21, 42, 53, 0.94);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar { display: none; }
+
+    .nav-links a {
+      color: rgba(247, 251, 250, 0.8);
+      font-size: 13px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover { color: #ffffff; }
+
+    .hero {
+      position: relative;
+      display: grid;
+      align-content: end;
+      min-height: calc(88vh - 58px);
+      padding: 10vh 8vw 8vh;
+      color: #ffffff;
+      background-image: url("2026-09-15-胶东大连双人游攻略-assets/bohai-ferry.jpg");
+      background-position: center;
+      background-size: cover;
+    }
+
+    .hero-content { max-width: 760px; }
+
+    .hero::before {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 35, 45, 0.52);
+      content: "";
+    }
+
+    .hero-content, .hero-next { position: relative; z-index: 1; }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #f2ce72;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 700px;
+      margin-bottom: 20px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: clamp(48px, 8vw, 94px);
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.03;
+    }
+
+    .hero-summary {
+      max-width: 630px;
+      margin-bottom: 28px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 18px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-meta span {
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      font-size: 13px;
+    }
+
+    .hero-next {
+      position: absolute;
+      right: 8vw;
+      bottom: 22px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .wrap {
+      width: min(1160px, 90vw);
+      margin: 0 auto;
+    }
+
+    .section { padding: 84px 0; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 34px;
+    }
+
+    .section-kicker {
+      padding-top: 7px;
+      color: var(--sea);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 40px;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .section-lead {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .route-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .route-stop {
+      position: relative;
+      min-height: 138px;
+      padding: 22px 18px 18px 0;
+    }
+
+    .route-stop:not(:last-child)::after {
+      position: absolute;
+      top: 42px;
+      right: 0;
+      width: 42%;
+      height: 1px;
+      background: var(--sea);
+      content: "";
+    }
+
+    .route-stop::before {
+      display: block;
+      width: 11px;
+      height: 11px;
+      margin-bottom: 13px;
+      border: 3px solid var(--paper);
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 1px var(--coral);
+      content: "";
+    }
+
+    .route-stop:nth-child(4)::before { background: var(--sun); box-shadow: 0 0 0 1px var(--sun); }
+    .route-stop:nth-child(5)::before { background: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+
+    .route-stop small { display: block; color: var(--muted); font-size: 12px; }
+    .route-stop strong { display: block; font-size: 20px; }
+
+    .budget-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.65fr);
+      gap: 38px;
+      padding: 36px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .budget-amount {
+      margin: 0 0 14px;
+      color: var(--sea);
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 58px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .budget-amount small { font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-size: 17px; }
+
+    .budget-bar { height: 12px; overflow: hidden; background: var(--seafoam); }
+    .budget-bar > span { display: block; width: 92.26%; height: 100%; background: var(--coral); }
+
+    .budget-note { margin: 11px 0 0; color: var(--muted); font-size: 13px; }
+
+    .budget-list { display: grid; gap: 10px; margin: 0; }
+
+    .budget-list div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid #e7efed;
+      font-size: 14px;
+    }
+
+    .budget-list dt { color: var(--muted); }
+    .budget-list dd { margin: 0; font-weight: 700; }
+
+    .city-guide { display: grid; gap: 22px; }
+
+    .day-card {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr) 260px;
+      gap: 26px;
+      align-items: start;
+      padding: 27px 28px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+    }
+
+    .day-date { color: var(--sea); font-size: 13px; font-weight: 800; letter-spacing: 0.6px; }
+    .day-date strong { display: block; color: var(--ink); font-family: Georgia, "Songti SC", serif; font-size: 27px; font-weight: 500; letter-spacing: 0; }
+    .day-card h3 { margin-bottom: 8px; font-size: 21px; }
+    .day-card p { margin-bottom: 0; color: var(--muted); font-size: 14px; }
+
+    .stay-note {
+      padding: 16px;
+      border-top: 3px solid var(--sea);
+      background: #eef7f4;
+    }
+
+    .stay-note span { display: block; margin-bottom: 5px; color: var(--sea); font-size: 11px; font-weight: 800; letter-spacing: 1.1px; }
+    .stay-note strong { display: block; margin-bottom: 5px; font-size: 15px; }
+    .stay-note p { font-size: 12px; }
+
+    .hotel-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+
+    .hotel-card {
+      min-height: 330px;
+      padding: 22px;
+      border-top: 4px solid var(--sea);
+      border-radius: 6px;
+      background: #ffffff;
+      box-shadow: 0 8px 22px rgba(21, 42, 53, 0.08);
+    }
+
+    .hotel-card:nth-child(2) { border-color: var(--coral); }
+    .hotel-card:nth-child(3) { border-color: var(--sun); }
+    .hotel-card:nth-child(4) { border-color: var(--blue); }
+
+    .hotel-city { margin-bottom: 8px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: 1px; }
+    .hotel-card h3 { min-height: 60px; margin-bottom: 10px; font-size: 18px; line-height: 1.35; }
+    .hotel-price { margin-bottom: 16px; color: var(--sea); font-family: Georgia, "Songti SC", serif; font-size: 33px; line-height: 1; }
+    .hotel-price small { font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-size: 13px; }
+    .hotel-card ul { display: grid; gap: 7px; margin: 0 0 16px; padding: 0; list-style: none; color: var(--muted); font-size: 13px; }
+    .hotel-card li::before { margin-right: 8px; color: var(--coral); content: "•"; }
+    .hotel-card a { color: var(--sea); font-size: 13px; font-weight: 800; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+    .sea-break {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      min-height: 380px;
+      color: #ffffff;
+      background: var(--ink);
+    }
+
+    .sea-break-copy { display: grid; align-content: center; padding: 54px 7vw; }
+    .sea-break-copy h2 { color: #ffffff; }
+    .sea-break-copy p { margin-bottom: 0; color: rgba(255,255,255,0.76); }
+    .sea-break-image { min-height: 320px; background: url("2026-09-15-胶东大连双人游攻略-assets/dalian-coast.jpg") center / cover; }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 34px;
+      max-width: 820px;
+    }
+
+    .check-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+
+    .check-item input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--sea); }
+    .check-item span { font-size: 14px; }
+    .check-item small { display: block; color: var(--muted); font-size: 12px; }
+    .check-item input:checked + span { color: var(--muted); text-decoration: line-through; }
+
+    .action-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+    .action-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      color: #ffffff;
+      background: var(--ink);
+      cursor: pointer;
+    }
+
+    .action-button.secondary { color: var(--ink); background: transparent; }
+    .action-button:hover { border-color: var(--sea); background: var(--sea); color: #ffffff; }
+
+    .source-note { color: var(--muted); font-size: 12px; }
+    .source-note a { color: var(--sea); }
+
+    footer { padding: 36px 5vw 44px; color: rgba(255,255,255,0.72); background: var(--ink); font-size: 12px; }
+    footer p { max-width: 960px; margin-bottom: 0; }
+
+    @media (max-width: 900px) {
+      .section-head, .budget-panel, .sea-break { grid-template-columns: 1fr; }
+      .hotel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .day-card { grid-template-columns: 90px minmax(0, 1fr); }
+      .stay-note { grid-column: 2; }
+      .sea-break-copy { padding: 54px 8vw; }
+      .sea-break-image { min-height: 260px; }
+    }
+
+    @media (max-width: 620px) {
+      .topbar { padding: 0 5vw; }
+      .nav-links { gap: 13px; }
+      .hero { min-height: calc(80vh - 58px); padding: 12vh 7vw 9vh; }
+      h1 { font-size: 49px; }
+      h2 { font-size: 32px; }
+      .section { padding: 58px 0; }
+      .section-head { gap: 10px; margin-bottom: 27px; }
+      .route-strip { grid-template-columns: 1fr; }
+      .route-stop { min-height: auto; padding: 13px 0 13px 28px; }
+      .route-stop::before { position: absolute; top: 19px; left: 0; margin: 0; }
+      .route-stop:not(:last-child)::after { top: 34px; left: 5px; width: 1px; height: calc(100% - 20px); }
+      .budget-panel { padding: 25px; }
+      .budget-amount { font-size: 48px; }
+      .day-card { grid-template-columns: 1fr; gap: 15px; padding: 22px; }
+      .stay-note { grid-column: auto; }
+      .hotel-grid, .checklist { grid-template-columns: 1fr; }
+      .hotel-card { min-height: auto; }
+    }
+
+    @media print {
+      .topbar, .hero-next, .action-row { display: none; }
+      body { background: #ffffff; }
+      .hero { min-height: 360px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section { padding: 34px 0; break-inside: avoid; }
+      .day-card, .hotel-card, .budget-panel { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="topbar" aria-label="攻略导航">
+    <div class="brand">OVER THE BOHAI</div>
+    <div class="nav-links">
+      <a href="#route">路线</a>
+      <a href="#itinerary">逐日行程</a>
+      <a href="#hotels">酒店</a>
+      <a href="#budget">预算</a>
+      <a href="#checklist">出发前</a>
+    </div>
+  </nav>
+
+  <header class="hero" data-screen-label="封面">
+    <div class="hero-content">
+      <p class="eyebrow">CHENGDU · QINGDAO · WEIHAI · YANTAI · DALIAN</p>
+      <h1>越过渤海，<br>把山海住进十天里。</h1>
+      <p class="hero-summary">2026 年 9 月 15 日从成都出发。两个人，10 天 9 晚，一次夜航大船，走完青岛、威海、烟台、蓬莱与大连。</p>
+      <div class="hero-meta">
+        <span>09.15 — 09.24</span>
+        <span>夫妻双人</span>
+        <span>预算上限 ¥10,000</span>
+        <span>1 晚渤海夜航</span>
+      </div>
+    </div>
+    <div class="hero-next">向下阅读完整路线与预订清单</div>
+  </header>
+
+  <main>
+    <section class="section" id="route" data-screen-label="路线总览">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">01 / 路线总览</div>
+          <div>
+            <h2>从海岸线出发，<br>在船舱里跨过渤海。</h2>
+            <p class="section-lead">路线坚持单向推进：飞机解决成都与东北的长距离，山东半岛用高铁和大巴串联，烟台至大连用夜航大船完成这趟旅行最重要的一段海上体验。</p>
+          </div>
+        </div>
+        <div class="route-strip" aria-label="旅行路线">
+          <div class="route-stop"><small>DAY 01—03</small><strong>青岛</strong><small>飞抵 · 老城 · 崂山</small></div>
+          <div class="route-stop"><small>DAY 04—05</small><strong>威海</strong><small>高铁 · 刘公岛 · 海岸</small></div>
+          <div class="route-stop"><small>DAY 06—07</small><strong>烟台 / 蓬莱</strong><small>高铁 · 蓬莱阁 · 登船</small></div>
+          <div class="route-stop"><small>DAY 07 夜—08 早</small><strong>渤海夜航</strong><small>三等 A 舱 · 约 6.5—7 小时</small></div>
+          <div class="route-stop"><small>DAY 08—10</small><strong>大连</strong><small>滨海路 · 东港 · 返程</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="budget" data-screen-label="预算总览">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">02 / 预算总览</div>
+          <div>
+            <h2>不是“差不多一万”，<br>是每一项都有封顶价。</h2>
+            <p class="section-lead">以下是两人总额。预算真正能成立的前提，是机票、酒店与付费景区按照设定上限下单；超过上限就换班次、换酒店或取消非必要门票。</p>
+          </div>
+        </div>
+        <div class="budget-panel">
+          <div>
+            <p class="budget-amount">¥9,226 <small>/ 预计支付</small></p>
+            <div class="budget-bar" aria-label="预算使用率 92.26%"><span></span></div>
+            <p class="budget-note">剩余 ¥774 仅用于航班波动、天气导致的港口接驳变化或一次必要的短途网约车。购物、酒水及老虎滩海洋公园不纳入此预算。</p>
+          </div>
+          <dl class="budget-list">
+            <div><dt>两段机票含行李</dt><dd>¥3,400</dd></div>
+            <div><dt>城际交通与夜船</dt><dd>¥1,156</dd></div>
+            <div><dt>市内交通</dt><dd>¥600</dd></div>
+            <div><dt>8 晚酒店</dt><dd>¥1,720</dd></div>
+            <div><dt>餐饮</dt><dd>¥1,500</dd></div>
+            <div><dt>门票</dt><dd>¥700</dd></div>
+            <div><dt>保险与杂项</dt><dd>¥150</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="itinerary" data-screen-label="逐日行程">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">03 / 逐日行程</div>
+          <div>
+            <h2>每天只安排一个重点，<br>给海风和意外留出时间。</h2>
+            <p class="section-lead">晨间与夜间行程以步行、地铁和公交为主。抵达城市后的第一件事始终是寄存行李或入住，避免拖着行李在景区赶路。</p>
+          </div>
+        </div>
+        <div class="city-guide">
+          <article class="day-card">
+            <div class="day-date">09 / 15<strong>DAY 01</strong></div>
+            <div><h3>成都飞抵青岛，走进老城夜色</h3><p>优先选成都天府至青岛胶东直飞，下午抵达后乘地铁进市南。入住后步行栈桥、天主教堂外观、中山路、劈柴院与信号山；晚餐控制在两人 ¥120 内。</p></div>
+            <aside class="stay-note"><span>住 / 青岛 01</span><strong>中山路地铁站周边</strong><p>第一晚不住机场。老城步行方便，次日不需要换酒店。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 16<strong>DAY 02</strong></div>
+            <div><h3>八大关到奥帆中心，一条免费的海岸日</h3><p>八大关、第二海水浴场、太平角、五四广场、奥帆中心顺序步行加地铁。中午在香港中路附近解决，日落留给奥帆中心，避免额外购买游船项目。</p></div>
+            <aside class="stay-note"><span>住 / 青岛 02</span><strong>继续住中山路</strong><p>减少搬行李；八大关往返用地铁与公交即可。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 17<strong>DAY 03</strong></div>
+            <div><h3>崂山太清线一日，晚间整理行李</h3><p>上午地铁到大河东，换乘景区观光车进太清游览区；17:00 前离园回市区。崂山 9 月处于旺季，必须在入园前 7 天实名预约，不把索道和额外项目计入基础预算。</p></div>
+            <aside class="stay-note"><span>住 / 青岛 03</span><strong>继续住中山路</strong><p>次日从青岛北站出发，地铁 1 号线直达。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 18<strong>DAY 04</strong></div>
+            <div><h3>高铁到威海，慢慢适应更安静的海</h3><p>青岛北至威海二等座按 ¥96 / 人封顶。下午入住后游悦海公园、幸福门，夜间去韩乐坊吃饭。当天不安排刘公岛，给高铁延误和午休留余量。</p></div>
+            <aside class="stay-note"><span>住 / 威海 01</span><strong>旅游码头 / 市中心</strong><p>第二天步行或短途公交到刘公岛旅游码头。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 19<strong>DAY 05</strong></div>
+            <div><h3>刘公岛，半岛旅行里唯一的登岛日</h3><p>上午乘往返船登刘公岛，成人票已含景区门票及船票 ¥122 / 人。下午回到市区后前往国际海水浴场、火炬八街或小石岛看日落，不再购买环岛游、潜艇与讲解等二次项目。</p></div>
+            <aside class="stay-note"><span>住 / 威海 02</span><strong>继续住市中心</strong><p>次日退房后乘高铁离开，尽量订上午班次。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 20<strong>DAY 06</strong></div>
+            <div><h3>威海到烟台，再到蓬莱</h3><p>威海至烟台二等座按 ¥27 / 人封顶，再转大巴去蓬莱约 1.5 小时、¥25 / 人。下午只走蓬莱海滨、八仙雕塑与老北山外围；戚继光纪念馆免费，晚上早休息。</p></div>
+            <aside class="stay-note"><span>住 / 蓬莱 01</span><strong>蓬莱阁景区步行区</strong><p>次日不用拖行李赶景点，退房后直接转去烟台港。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 21<strong>DAY 07</strong></div>
+            <div><h3>蓬莱阁登高，夜航横渡渤海</h3><p>上午入蓬莱阁，成人 ¥100 / 人；下午大巴返回烟台市区、转往烟台港。建议 20:30 前到港，选择 22:10 至 22:40 的夜班。订三等 A 舱，两人预算 ¥680，比四等多约 ¥120，但夜间休息明显更好。</p></div>
+            <aside class="stay-note"><span>住 / 船上</span><strong>烟台港 → 大连湾</strong><p>带上外套、耳塞、洗漱包与充电宝；船上这一晚已替代酒店。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 22<strong>DAY 08</strong></div>
+            <div><h3>清晨抵达大连，先寄存再游城</h3><p>约 05:00 至 05:30 抵达。不要加钱早入住，先寄存行李；上午走中山广场、劳动公园，下午东港商务区、威尼斯水城、港东五街。晚间再办理入住，早到日保持轻量行程。</p></div>
+            <aside class="stay-note"><span>住 / 大连 01</span><strong>友好广场 / 青泥洼桥</strong><p>近地铁 2 号线，去东港和机场都方便。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 23<strong>DAY 09</strong></div>
+            <div><h3>滨海路慢走日，把大连留到最后</h3><p>星海广场、跨海大桥观景、傅家庄、北大桥与渔人码头分段游览。中间用公交或一次短途网约车接驳，避免强行徒步全程。老虎滩五馆票两人需 ¥440，本预算方案不进入。</p></div>
+            <aside class="stay-note"><span>住 / 大连 02</span><strong>继续住友好广场</strong><p>晚餐后整理托运和随身行李，次日直接返程。</p></aside>
+          </article>
+          <article class="day-card">
+            <div class="day-date">09 / 24<strong>DAY 10</strong></div>
+            <div><h3>大连飞回成都</h3><p>优先订中午或下午航班。地铁 2 号线或机场大巴前往周水子机场；两人返程机票、行李额度与选座总价不得超过 ¥2,000，超过则优先调整返程日期而不是挤占酒店与餐饮预算。</p></div>
+            <aside class="stay-note"><span>返程</span><strong>大连周水子 → 成都</strong><p>提前 2.5 小时抵机场，保留夜船后的行程弹性。</p></aside>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="hotels" data-screen-label="酒店建议">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">04 / 每晚住哪里</div>
+          <div>
+            <h2>酒店不追海景，<br>把钱花在位置与睡眠上。</h2>
+            <p class="section-lead">以下是按行程匹配的住宿区域和可直接搜索的酒店。价格是双人标间含税封顶价，不是强制指定某一家；优先选择可免费取消、评分稳定、距地铁或码头步行 10 分钟内的房源。</p>
+          </div>
+        </div>
+        <div class="hotel-grid">
+          <article class="hotel-card">
+            <div class="hotel-city">青岛 / 3 晚</div>
+            <h3>如家·neo 青岛栈桥中山路地铁站海景店</h3>
+            <div class="hotel-price">¥210 <small>/ 晚封顶</small></div>
+            <ul>
+              <li>地址：中山路 149 号</li>
+              <li>步行约 10 分钟至栈桥</li>
+              <li>地铁 1 号线出口约 50 米</li>
+              <li>3 晚预算：¥630</li>
+            </ul>
+            <a href="https://www.bthhotels.com/wap/HotelInfo/0532B4?pt=info" target="_blank" rel="noopener noreferrer">查看酒店位置与官方信息</a>
+          </article>
+          <article class="hotel-card">
+            <div class="hotel-city">威海 / 2 晚</div>
+            <h3>刘公岛旅游码头或幸福门步行圈的连锁酒店</h3>
+            <div class="hotel-price">¥190 <small>/ 晚封顶</small></div>
+            <ul>
+              <li>搜索词：威海刘公岛旅游码头</li>
+              <li>次日登岛不早起赶车</li>
+              <li>优先有洗衣房与寄存服务</li>
+              <li>2 晚预算：¥380</li>
+            </ul>
+            <a href="https://qsyxxgk.weihai.gov.cn/art/2026/4/20/art_85585_2871057.html" target="_blank" rel="noopener noreferrer">核对刘公岛码头与票务信息</a>
+          </article>
+          <article class="hotel-card">
+            <div class="hotel-city">蓬莱 / 1 晚</div>
+            <h3>汉庭烟台蓬莱阁景区酒店或同区域连锁店</h3>
+            <div class="hotel-price">¥190 <small>/ 晚封顶</small></div>
+            <ul>
+              <li>搜索词：蓬莱阁景区酒店</li>
+              <li>早晨步行进蓬莱阁</li>
+              <li>退房后大巴转烟台港</li>
+              <li>1 晚预算：¥190</li>
+            </ul>
+            <a href="https://m.huazhu.com/Hotel/Detail/2656991" target="_blank" rel="noopener noreferrer">查看汉庭蓬莱阁景区店</a>
+          </article>
+          <article class="hotel-card">
+            <div class="hotel-city">大连 / 2 晚</div>
+            <h3>如家商旅大连中山广场青泥洼桥店</h3>
+            <div class="hotel-price">¥260 <small>/ 晚封顶</small></div>
+            <ul>
+              <li>地址：中山区一德街 11 号</li>
+              <li>距地铁 2 号线约 100 米</li>
+              <li>东港、机场、星海均易接驳</li>
+              <li>2 晚预算：¥520</li>
+            </ul>
+            <a href="https://hotels.ctrip.com/hotels/433293.html" target="_blank" rel="noopener noreferrer">查看酒店位置与评价</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sea-break" data-screen-label="大连海岸">
+      <div class="sea-break-copy">
+        <p class="eyebrow">THE LAST COASTLINE</p>
+        <h2>夜船省下一晚房费，<br>也把大连留给清晨。</h2>
+        <p>烟台至大连的夜航不是交通空档，而是这条路线的主场。三等 A 舱有固定铺位，建议两人尽量选相邻下铺；船票确认后再锁定大连两晚酒店。</p>
+      </div>
+      <div class="sea-break-image" role="img" aria-label="大连星海广场海岸"></div>
+    </section>
+
+    <section class="section" id="checklist" data-screen-label="出发前清单">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">05 / 出发前清单</div>
+          <div>
+            <h2>先锁价格，再锁行程。</h2>
+            <p class="section-lead">勾选状态会保存在当前浏览器。每一项都与预算上限绑定，完成前不要购买不可退的附加服务。</p>
+          </div>
+        </div>
+        <div class="checklist">
+          <label class="check-item"><input type="checkbox" data-check="flight-out"><span>锁定成都 → 青岛机票<small>两人总价含行李不超过 ¥1,700</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="flight-back"><span>锁定大连 → 成都机票<small>两人总价含行李不超过 ¥2,000</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="hotel-qingdao"><span>预订青岛 3 晚可退酒店<small>总价不超过 ¥630</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="hotel-weihai"><span>预订威海 2 晚可退酒店<small>总价不超过 ¥380</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="hotel-penglai"><span>预订蓬莱 1 晚可退酒店<small>总价不超过 ¥190</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="hotel-dalian"><span>预订大连 2 晚可退酒店<small>总价不超过 ¥520</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="rail"><span>12306 开售后购买两段城际高铁<small>重点关注青岛北 → 威海、威海 → 烟台</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="ferry"><span>确认烟台 → 大连夜船与三等 A 舱<small>提前核对具体港口、天气和检票时间</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="laoshan"><span>入园前 7 天预约崂山<small>选择太清游览区，不叠加索道项目</small></span></label>
+          <label class="check-item"><input type="checkbox" data-check="insurance"><span>购买短期旅行意外险<small>控制在两人 ¥50 至 ¥80</small></span></label>
+        </div>
+        <div class="action-row">
+          <button class="action-button" type="button" id="print-button" title="打印或保存为 PDF">打印攻略</button>
+          <button class="action-button secondary" type="button" id="reset-button" title="清空所有已完成项目">清空勾选</button>
+        </div>
+        <p class="source-note">价格核验来源：<a href="https://www.12306.cn/mormhweb/zxdt/202202/t20220225_36975.html" target="_blank" rel="noopener noreferrer">12306 青荣城际公布票价</a>、<a href="https://www.12306cp.cn/index.php/Home/Index/yt_dl/" target="_blank" rel="noopener noreferrer">烟台至大连船期与舱价</a>、<a href="https://www.qdlaoshan.cn/New-News-info-nid-6285.html" target="_blank" rel="noopener noreferrer">崂山预约公告</a>、<a href="https://www.yantai.gov.cn/col/col43277/art/2026/art_b524b8d599f6426da5ce8223fe757c6e.html" target="_blank" rel="noopener noreferrer">蓬莱阁票价信息</a>。票价及船期会动态变化，支付前以官方或平台页面为准。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>本攻略为 2026 年 8 月依据公开价格制作的预算型行程。坚持机票、酒店与门票封顶价，预计支付 ¥9,226；若航班或酒店超过上限，优先更换班次、住宿区域或返程日期，而不是动用景区与餐饮预算。配图参考：携程船票页面的渤海轮渡照片、Trip.com 大连海岸照片。</p>
+  </footer>
+
+  <script>
+    (function () {
+      var storagePrefix = "bohai-trip-2026-";
+      var checkboxes = document.querySelectorAll("[data-check]");
+
+      checkboxes.forEach(function (checkbox) {
+        var key = storagePrefix + checkbox.dataset.check;
+        checkbox.checked = window.localStorage.getItem(key) === "true";
+        checkbox.addEventListener("change", function () {
+          window.localStorage.setItem(key, String(checkbox.checked));
+        });
+      });
+
+      document.getElementById("print-button").addEventListener("click", function () {
+        window.print();
+      });
+
+      document.getElementById("reset-button").addEventListener("click", function () {
+        checkboxes.forEach(function (checkbox) {
+          checkbox.checked = false;
+          window.localStorage.removeItem(storagePrefix + checkbox.dataset.check);
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
