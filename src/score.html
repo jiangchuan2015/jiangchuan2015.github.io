@@ -87,7 +87,7 @@
 
     /* 表格样式 */
     .table-wrap {
-      overflow: auto;
+      overflow: visible;
     }
 
     table {
@@ -99,7 +99,9 @@
     thead th {
       position: sticky;
       top: 0;
+      z-index: 1;
       background: #f2f4f8;
+      box-shadow: 0 1px 0 var(--border);
       border-bottom: 1px solid var(--border);
       padding: 10px;
       text-align: left;
@@ -113,6 +115,25 @@
       border-bottom: 1px solid var(--border);
       padding: 10px;
       font-size: 14px;
+    }
+
+    .student-name {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .student-name:hover {
+      text-decoration: underline;
+    }
+
+    .student-name:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
     }
 
     tbody tr:hover {
@@ -136,6 +157,16 @@
 
     tbody tr.row-highlight td {
       font-weight: 600;
+    }
+
+    tbody tr td.score-highlight {
+      color: #FF3333;
+      font-weight: bold;
+    }
+
+    tbody tr td.score-low {
+      color: #15803D;
+      font-weight: bold;
     }
 
     .status {
@@ -514,7 +545,9 @@
     const TICK_SCORE_STEP_SUBJECTS = 25;
     const TICK_SCORE_STEP_SUMMARY = 150;
     const SCORE_HIGHLIGHT_RATIO = 0.8;
+    const SCORE_LOW_RATIO = 0.6;
     const COLOR_SCORE_HIGHLIGHT = "#FF3333";
+    const COLOR_SCORE_LOW = "#15803D";
     const DEFAULT_NAME = "姜人文";
 
     let records = [];
@@ -522,6 +555,14 @@
       examsOrder = [],
       byNameExam = {};
     let sortState = { key: KEY_TOTAL_CLASS_RANK, order: "asc" };
+
+    function getScoreClass(category, value) {
+      const fullMark = FULL_MARKS[category];
+      if (typeof fullMark !== "number" || !Number.isFinite(value)) return "";
+      if (value >= fullMark * SCORE_HIGHLIGHT_RATIO) return "score-highlight";
+      if (value < fullMark * SCORE_LOW_RATIO) return "score-low";
+      return "";
+    }
 
     function init() {
       // 预计算总分
@@ -565,6 +606,12 @@
         renderTable();
         renderChart();
       };
+      document.getElementById("tableBody").onclick = (event) => {
+        const button = event.target.closest("button.student-name");
+        if (!button) return;
+        nSel.value = button.textContent;
+        nSel.onchange();
+      };
       window.onresize = renderChart;
       renderTable();
       renderChart();
@@ -595,7 +642,13 @@
       body.innerHTML = filtered
         .map(
           (r, i) =>
-            `<tr class="${r[KEY_NAME] === name ? "row-highlight" : ""}">${TABLE_COLUMNS.map((c) => `<td>${c === "序号" ? i + 1 : (r[c] ?? "")}</td>`).join("")}</tr>`,
+            `<tr class="${r[KEY_NAME] === name ? "row-highlight" : ""}">${TABLE_COLUMNS.map((c) => {
+              const scoreClass = getScoreClass(c, r[c]);
+              if (c === KEY_NAME) {
+                return `<td><button type="button" class="student-name">${r[c]}</button></td>`;
+              }
+              return `<td${scoreClass ? ` class="${scoreClass}"` : ""}>${c === "序号" ? i + 1 : (r[c] ?? "")}</td>`;
+            }).join("")}</tr>`,
         )
         .join("");
     }
@@ -727,8 +780,9 @@
           const x = groupX + si * (barW + innerGap);
           const y = h - margin.b - barH;
           html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="${colors[si]}" rx="1" />`;
-          const highlight = isScore && val > fm * SCORE_HIGHLIGHT_RATIO;
-          html += `<text x="${x + barW / 2}" y="${y - 5}" text-anchor="middle" font-size="11" font-weight="${highlight ? "bold" : "normal"}" fill="${highlight ? COLOR_SCORE_HIGHLIGHT : "#333"}">${val}</text>`;
+          const scoreClass = isScore ? getScoreClass(cat, s[i]) : "";
+          const textColor = scoreClass === "score-highlight" ? COLOR_SCORE_HIGHLIGHT : scoreClass === "score-low" ? COLOR_SCORE_LOW : "#333";
+          html += `<text x="${x + barW / 2}" y="${y - 5}" text-anchor="middle" font-size="11" font-weight="${scoreClass ? "bold" : "normal"}" fill="${textColor}">${val}</text>`;
         });
         html += `<text x="${margin.l + i * groupStep + groupStep / 2}" y="${h - 15}" text-anchor="middle" font-size="13" fill="#444">${cat}</text>`;
       });
